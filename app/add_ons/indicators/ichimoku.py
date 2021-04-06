@@ -3,8 +3,8 @@ import pyqtgraph as pg
 from pprint import pprint
 from PySide2 import QtCore, QtGui, QtWidgets
 
-from utils import constants as cst
 from utils.indicators_utils import Indicator, InputField, ChoiceField
+
 
 class Ichimoku(Indicator):
     def __init__(self):
@@ -121,25 +121,25 @@ class Ichimoku(Indicator):
 
 
     def tenkan(self):
-        nine_high = self.values[cst.HIGH].rolling(window=9).max()
-        nine_low = self.values[cst.LOW].rolling(window=9).min()
+        nine_high = self.values['High'].rolling(window=9).max()
+        nine_low = self.values['Low'].rolling(window=9).min()
         self.values['Tenkan'] = (nine_high + nine_low) / 2
 
     def kijun(self):
-        twenty_six_high = self.values[cst.HIGH].rolling(window=26).max()
-        twenty_six_low = self.values[cst.LOW].rolling(window=26).min()
+        twenty_six_high = self.values['High'].rolling(window=26).max()
+        twenty_six_low = self.values['Low'].rolling(window=26).min()
         self.values['Kijun'] = (twenty_six_high + twenty_six_low) / 2
 
     def senlou_span_a(self):
         self. values['SpanA'] = ((self.values['Tenkan'] + self.values['Kijun']) / 2).shift(26)
 
     def senlou_span_b(self):
-        fifty_high = self.values[cst.HIGH].rolling(window=52).max()
-        fifty_low = self.values[cst.LOW].rolling(window=52).min()
+        fifty_high = self.values['High'].rolling(window=52).max()
+        fifty_low = self.values['Low'].rolling(window=52).min()
         self.values['SpanB'] = ((fifty_high + fifty_low) / 2).shift(26)
 
     def chikou_span(self):
-        self.values['Chikou'] = self.values[cst.CLOSE].shift(-26)
+        self.values['Chikou'] = self.values['Close'].shift(-26)
 
     def get_ichimoku(self):
         self.tenkan()

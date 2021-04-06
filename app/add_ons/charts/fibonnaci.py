@@ -1,33 +1,77 @@
 import numpy as np
 import pyqtgraph as pg
-from PySide2 import QtCore, QtWidgets
 
-from utils import constants as cst
 from utils.indicators_utils import Indicator, InputField, ChoiceField
 
 COLORS = {
-    78.6: (255, 56, 56),
-    61.8: (218, 255, 56),
-    50.0: (56, 255, 82),
-    38.2: (148, 56, 255),
-    23.6: (56, 95, 255),
-}
+            78.6: (255, 56, 56),
+            61.8: (218, 255, 56),
+            50.0: (56, 255, 82),
+            38.2: (148, 56, 255),
+            23.6: (56, 95, 255),
+        }
 
-
-class Fibonnaci(object):
-    def __init__(self, parent=None):
+class Fibonnaci(Indicator):
+    def __init__(self):
         super(Fibonnaci, self).__init__()
+
         self.name = "Fibonnaci"
         self.description = "Fibonnaci"
 
-    def run(self, graph=None, position=None):
-        self.quotation_plot = graph
-        size_y = (graph.viewRange()[1][1] - graph.viewRange()[1][0]) / 2
-        self.roi = pg.RectROI(pos=[position.x(), position.y()],
-                              size=(4000000.0, size_y),
+        # Define and register all customisable settings
+        input_price_low = InputField("Low (Price)", value=347)
+        input_price_low_b = InputField("Low (Bar)", value=113)
+        input_price_high = InputField("High (Price)", value=50)
+        input_price_high_b = InputField("High (Bar)", value=60)
+
+        line0 = InputField(
+            "0% & 100%", color=(55, 55, 55), width=2, disable_line_style=True
+        )
+        line23 = InputField(
+            "23.6%", color=COLORS[23.6], width=2, disable_line_style=True
+        )
+        line38 = InputField(
+            "38.2%", color=COLORS[38.2], width=2, disable_line_style=True
+        )
+        line50 = InputField(
+            "50%", color=COLORS[50.0], width=2,disable_line_style=True
+        )
+        line61 = InputField(
+            "61.8%", color=COLORS[61.8], width=2, disable_line_style=True
+        )
+        line78 = InputField(
+            "78.6%", color=COLORS[78.6], width=2, disable_line_style=True
+        )
+        self.register_fields(input_price_low,
+                             input_price_high,
+                             input_price_low_b,
+                             input_price_high_b,
+                             line0,
+                             line23,
+                             line38,
+                             line50,
+                             line61,
+                             line78
+                             )
+
+    def create_indicator(self, graph_view, *args, **kwargs):
+        super(Fibonnaci, self).create_indicator(self, graph_view)
+
+        # Get values
+        values = graph_view.values
+        self.quotation_plot = graph_view.g_quotation
+
+        # Retrive settings
+        field_x_low = self.get_field("Low (Price)")
+        field_y_low = self.get_field("Low (Bar)")
+        field_x_high = self.get_field("High (Price)")
+        field_y_high = self.get_field("High (Bar)")
+
+        self.roi = pg.RectROI([field_x_low.value, field_y_low.value],
+                              [field_x_high.value, field_y_high.value],
                               invertible=True,
                               pen=pg.mkPen(color=(255, 255, 255),
-                                           width=1),
+                                           width=1,),
                               hoverPen=None,
                               )
 
@@ -36,12 +80,12 @@ class Fibonnaci(object):
 
         self.set_fibonnaci_levels()
         self.roi.sigRegionChanged.connect(self.move_items)
-        return self.roi
 
     def move_items(self):
         """This method is call everytime the ROI is move.
         """
         self.set_fibonnaci_levels()
+
 
     def set_fibonnaci_levels(self):
         try:
@@ -109,6 +153,7 @@ class Fibonnaci(object):
         line.setSelected(False)
         return line
 
+
     def _set_label_level(self, prc=50.0):
         """This method plot label for each retracement
         :param widget: TextItem
@@ -130,6 +175,7 @@ class Fibonnaci(object):
         label.setPos(position, ypos[1])
         return label
 
+
     def position_line(self, prc=50.0):
         """This method return the graph position for the levels
         """
@@ -137,6 +183,7 @@ class Fibonnaci(object):
         x_pos = [self.roi.pos()[0], rtc]
         y_pos = [self.roi.pos()[0] + self.roi.size()[0], rtc]
         return x_pos, y_pos
+
 
     def _get_fibonnaci_level(self, prc):
         """This method calcul the retracement level calculating the difference
