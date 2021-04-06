@@ -51,6 +51,7 @@ class MainWindow(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
         self.thread_pool = ThreadPool()
         self.signals = EventHandler()
         self.favorites_manager = FavoritesManager(parent=self)
+        self.roi_manager = ROIManager(parent=self)
 
         # Signals
         self.lie_ticker.mousePressEvent = self.tickers_dialog.show

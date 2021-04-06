@@ -187,8 +187,9 @@ def find_method(module, obj):
     :rtype: object
     """
     _module, sep, rest = module.partition(".")
-    if getattr(obj, _module, None):
+    if getattr(obj, _module):
         obj = getattr(obj, _module)
+
         if sep:
             obj = find_method(module=rest, obj=obj)
     else:

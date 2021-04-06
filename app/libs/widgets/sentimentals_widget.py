@@ -20,9 +20,9 @@ class Sentimental_Widget(QtWidgets.QWidget):
 
         layout = QtWidgets.QVBoxLayout(self)
 
-        for ticker in TICKERS:
-            item = self.get_widget_items(ticker)
-            layout.addWidget(item)
+        # for ticker in TICKERS:
+        #     item = self.get_widget_items(ticker)
+        #     layout.addWidget(item)
 
     def get_widget_items(self, tick):
         widget = Sentimental_Widget_Item()

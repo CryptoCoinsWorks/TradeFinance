@@ -1,53 +1,40 @@
 import numpy as np
 import pyqtgraph as pg
+from PySide2 import QtCore, QtWidgets
 
 from utils.indicators_utils import Indicator, InputField, ChoiceField
 
-RATIO = [78.6, 61.8, 50.0, 38.2, 23.6]
 COLORS = {
-            78.6: (255, 56, 56),
-            61.8: (218, 255, 56),
-            50.0: (56, 255, 82),
-            38.2: (148, 56, 255),
-            23.6: (56, 95, 255),
-        }
+    78.6: (255, 56, 56),
+    61.8: (218, 255, 56),
+    50.0: (56, 255, 82),
+    38.2: (148, 56, 255),
+    23.6: (56, 95, 255),
+}
+
 
 class Fibonnaci(Indicator):
-    def __init__(self):
+    def __init__(self, parent=None):
         super(Fibonnaci, self).__init__()
-
         self.name = "Fibonnaci"
         self.description = "Fibonnaci"
 
-        # Define and register all customisable settings
-        # field_input = ChoiceField(
-        #     "Input", choices=["Open", "Close", "High", "Low"], default="Close"
-        # )
-        # self.register_field(field_input)
-        # line1 = InputField(
-        #     "Fibonnaci", color=(51, 153, 255), value=3, width=2
-        # )
-        # self.register_fields(line1)
-
-    def create_indicator(self, graph_view, *args, **kwargs):
-        super(Fibonnaci, self).create_indicator(self, graph_view)
-
-        # Get values
-        values = graph_view.values
-        self.quotation_plot = graph_view.g_quotation
-
-        self.roi = pg.RectROI([347, 113], [50, 60],
+    def run(self, graph=None, position=None):
+        self.quotation_plot = graph
+        self.roi = pg.RectROI(pos=[position.x(), position.y()],
+                              size=[position.x() + 1, position.y()+1],
                               invertible=True,
                               pen=pg.mkPen(color=(255, 255, 255),
-                                           width=1,),
+                                           width=1, ),
                               hoverPen=None,
                               )
 
-        self.roi.addTranslateHandle((0,0))
+        self.roi.addTranslateHandle((0, 0))
         self.quotation_plot.addItem(self.roi)
 
         self.set_fibonnaci_levels()
         self.roi.sigRegionChanged.connect(self.move_items)
+        return self.roi
 
     def move_items(self):
         """This method is call everytime the ROI is move.
@@ -102,6 +89,7 @@ class Fibonnaci(Indicator):
         self.quotation_plot.addItem(self.label_100)
         self.quotation_plot.addItem(self.label_1)
 
+
     def _set_fibonnaci_level(self, prc=50.0):
         """This method plot line for each retracement
         :param widget: ROIWidget
@@ -118,7 +106,6 @@ class Fibonnaci(Indicator):
                                  )
         line.setSelected(False)
         return line
-
 
     def _set_label_level(self, prc=50.0):
         """This method plot label for each retracement
@@ -148,7 +135,6 @@ class Fibonnaci(Indicator):
         x_pos = [self.roi.pos()[0], rtc]
         y_pos = [self.roi.pos()[0] + self.roi.size()[0], rtc]
         return x_pos, y_pos
-
 
     def _get_fibonnaci_level(self, prc):
         """This method calcul the retracement level calculating the difference
