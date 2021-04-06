@@ -25,17 +25,17 @@ class MarketsWidget(StackedWidget):
     def __init__(self, parent=None):
         super(MarketsWidget, self).__init__(parent)
 
-        page = QtWidgets.QWidget()
-        layout = QtWidgets.QHBoxLayout(page)
-
-        for count, (name, tick) in enumerate(TICKERS.items()):
-            if count % 5 == 0:
-                page = QtWidgets.QWidget()
-                layout = QtWidgets.QHBoxLayout(page)
-            item = MarketsWidgetItem(self, ticker=tick, compagny=name)
-            layout.addWidget(item)
-
-            self.addWidget(page)
+        # page = QtWidgets.QWidget()
+        # layout = QtWidgets.QHBoxLayout(page)
+        #
+        # for count, (name, tick) in enumerate(TICKERS.items()):
+        #     if count % 5 == 0:
+        #         page = QtWidgets.QWidget()
+        #         layout = QtWidgets.QHBoxLayout(page)
+        #     item = MarketsWidgetItem(self, ticker=tick, compagny=name)
+        #     layout.addWidget(item)
+        #
+        #     self.addWidget(page)
 
 
 class MarketsWidgetItem(QtWidgets.QWidget, markets_widget.Ui_markets):

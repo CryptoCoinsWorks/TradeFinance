@@ -1,7 +1,7 @@
 import time
 import pyqtgraph as pg
 from PySide2 import QtCore, QtWidgets
-
+from add_ons.charts import fibonnaci
 
 class ROIManager(QtCore.QObject):
     def __init__(self, parent=None):
@@ -34,15 +34,6 @@ class ROIManager(QtCore.QObject):
         mouse_point = vb.mapSceneToView(event.pos())
         if self.current_tool:
             self.current_tool(initial_pos=mouse_point)  # Exec the current tool
-
-    def bounded_line_drawer(self, initial_pos, **kwargs):
-        """Draw a bounded line
-        """
-        print('la')
-        roi = pg.LineSegmentROI((initial_pos, initial_pos), removable=True)
-        self.current_handle = roi.getHandles()[-1]
-        self.current_graph.addItem(roi)
-        roi.sigRemoveRequested.connect(self._on_roi_remove_requested)
 
     def set_tool(self, **kwargs):
         """Set the current tool. kwargs may have a tool which corresponds to
@@ -100,3 +91,18 @@ class ROIManager(QtCore.QObject):
         :type roi: pg.ROI
         """
         self.remove_roi(roi=roi)
+
+
+    def bounded_line_drawer(self, initial_pos, **kwargs):
+        """Draw a bounded line
+        """
+        roi = pg.LineSegmentROI((initial_pos, initial_pos), removable=True)
+        self.current_handle = roi.getHandles()[-1]
+        self.current_graph.addItem(roi)
+        roi.sigRemoveRequested.connect(self._on_roi_remove_requested)
+
+    def fibonnaci(self, initial_pos, **kwargs):
+        self.fibo = fibonnaci.Fibonnaci(self)
+        self.fibo_item = self.fibo.run(graph=self.current_graph, position=initial_pos)
+        self.fibo_item.sigRegionChanged.connect(self.fibo.move_items)
+        self.fibo_item.sigRemoveRequested.connect(self._on_roi_remove_requested)

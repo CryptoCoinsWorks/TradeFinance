@@ -100,7 +100,10 @@
             "type": "resources",
             "value": ":/svg/brush.svg"
         },
-        "action": "unknow_command",
+        "action": "roi_manager.set_tool",
+        "args": {
+            "tool": "fibonnaci"
+            },
         "tooltip": "Brush",
         "text": "Brush",
         "checkable": false

@@ -57,25 +57,7 @@ class GraphView(pg.GraphicsLayoutWidget):
         item = CandlestickItem(ls_data)
         self.g_quotation.addItem(item)
         self.g_quotation.enableAutoRange()
-
-        color_line = (38, 166, 154)
-        if data['Close'].iloc[-1] < data['Open'].iloc[-1]:
-            color_line = (239, 83, 80)
-
-        self.h_price = pg.InfiniteLine(
-            pos=data['Close'].iloc[-1],
-            angle=0,
-            movable=False,
-            pen=pg.mkPen(
-                color=color_line,
-                width=1,
-                style=QtCore.Qt.DotLine,
-            ),
-        )
-        self.g_quotation.addItem(self.h_price, ignoreBounds=True)
-
         self.set_time_x_axis(widget=self.g_quotation)
-        self._set_y_axis_(widget=self.g_quotation, data_close=data['Close'])
         self.set_cross_hair()
 
     def set_cross_hair(self):
@@ -116,18 +98,6 @@ class GraphView(pg.GraphicsLayoutWidget):
             self.v_line.setPos(mousePoint.x())
             self.h_line.setPos(mousePoint.y())
 
-    def _set_y_axis_(self, widget, data_close):
-        """Set Y Axis in Left and add Price.
-
-        :param widget: GraphWidget
-        :type widget: PQQt.GraphWidget
-        :param data_close: Data Price 'Close'
-        :type data_close: DataFrame
-        """
-        widget.showAxis('right')
-        axis = widget.getAxis('right')
-        axis.setTicks([[(data_close[-1], str(round(data_close[-1], 2)))]])
-
     @QtCore.Slot(object)
     def _on_mouse_clicked(self, event):
         """Called on mouse clicked
@@ -142,7 +112,6 @@ class GraphView(pg.GraphicsLayoutWidget):
     def mousePressEvent(self, event):
         self.signals.sig_graph_mouse_pressed.emit(event)
         super(GraphView, self).mousePressEvent(event)
-        print(event.pos())
 
     def mouseReleaseEvent(self, event):
         self.signals.sig_graph_mouse_released.emit(event)
