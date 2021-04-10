@@ -15,6 +15,8 @@ class ArticlesWidget(QtWidgets.QListWidget):
 
     @QtCore.Slot(str)
     def _on_get_articles(self, ticker):
+
+        print(ticker)
         articles = self._get_articles_dict(ticker=ticker)
         self.clear()
 

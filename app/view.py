@@ -11,7 +11,6 @@ from libs.events_handler import EventHandler
 from libs.tickers_dialog import TickersDialogWindow
 from libs.widgets.busywidget import BusyIndicator
 from libs.thread_pool import ThreadPool
-from libs.graph.candlestick import CandlestickItem
 from libs.io.favorite_settings import FavoritesManager
 from libs.widgets.sentimentals_widget import Sentimental_Widget_Item
 from libs.splashcreen import SplashScreen
@@ -82,21 +81,21 @@ class MainWindow(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
         self.tickers_dialog.signal.sig_ticker_choosen.connect(
             self.wgt_articles._on_get_articles
         )
-        self.wgt_favorites.signals.sig_favorite_clicked.connect(
-            self.wgt_articles._on_get_articles
-        )
+        # self.wgt_favorites.signals.sig_favorite_clicked.connect(
+        #     self._on_return_articles
+        # )
         self.tickers_dialog.signal.sig_ticker_choosen.connect(
             self.wid_table_financ.on_set_financials_table
         )
         self.tickers_dialog.signal.sig_ticker_choosen.connect(
             self.set_sentiment_compagny
         )
-        self.wgt_favorites.signals.sig_favorite_clicked.connect(
-            self.wid_table_financ.on_set_financials_table
-        )
-        self.wgt_favorites.signals.sig_favorite_clicked.connect(
-            self.set_sentiment_compagny
-        )
+        # self.wgt_favorites.signals.sig_favorite_clicked.connect(
+        #     self.wid_table_financ.on_set_financials_table
+        # )
+        # self.wgt_favorites.signals.sig_favorite_clicked.connect(
+        #     self.set_sentiment_compagny
+        # )
         self.thread_pool.signals.sig_thread_pre.connect(
             self.busy_indicator.show
         )
@@ -210,6 +209,14 @@ class MainWindow(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
         widget = Sentimental_Widget_Item()
         widget.set_sentimental_ui(ticker=ticker)
         self.financials_layout.addWidget(widget)
+
+    @QtCore.Slot(str)
+    def _on_return_articles(self, ticker):
+        # self.thread_pool.execution(function=self._thread_articles, args=ticker)
+        self._thread_articles(ticker)
+
+    def _thread_articles(self, ticker):
+        self.wgt_articles._on_get_articles(ticker=ticker)
 
     def resizeEvent(self, event):
         if self.tickers_dialog:

@@ -1,3 +1,4 @@
+import numpy as np
 import pyqtgraph as pg
 from PySide2 import QtCore, QtGui, QtWidgets
 
@@ -33,7 +34,6 @@ class GraphView(pg.GraphicsLayoutWidget):
 
     def plot_quotation(self, data, clear=True):
         """Plot the quotation
-
         :param data: The data to plot
         :type data: pd.dataframe
         :param clear: Clear the graph before plot, defaults to True
@@ -56,8 +56,20 @@ class GraphView(pg.GraphicsLayoutWidget):
             ls_data.append((dates[index], _open, _close, _high, _low))
         item = CandlestickItem(ls_data)
         self.g_quotation.addItem(item)
-        self.g_quotation.enableAutoRange()
         self.set_time_x_axis(widget=self.g_quotation)
+        self.set_y_axis(widget=self.g_quotation,
+                        data_close=data['Close'])
+
+        price_variation = (np.amax(data['Close'])-np.amin(data['Close'])) / 2
+
+        self.range_view = (dates[-240], dates[-1])
+        self.g_quotation.setXRange(self.range_view[0], self.range_view[1])
+        self.g_quotation.setLimits(xMin=dates[0]-10000000,
+                                   xMax=dates[-1]+10000000,
+                                   yMin=np.amin(data['Close'])-price_variation,
+                                   yMax=np.amax(data['Close'])+price_variation,
+                                   )
+
         self.set_cross_hair()
 
     def set_cross_hair(self):
@@ -84,6 +96,17 @@ class GraphView(pg.GraphicsLayoutWidget):
 
     def set_time_x_axis(self, widget):
         widget.setAxisItems({"bottom": pg.DateAxisItem(orientation="bottom")})
+
+    def set_y_axis(self, widget, data_close):
+        """Set Y Axis in Left and add Price.
+        :param widget: GraphWidget
+        :type widget: PQQt.GraphWidget
+        :param data_close: Data Price 'Close'
+        :type data_close: DataFrame
+        """
+        widget.showAxis('right')
+        axis = widget.getAxis('right')
+        axis.setTicks([[(data_close[-1], str(round(data_close[-1], 2)))]])
 
     @QtCore.Slot(object)
     def _on_mouse_moved(self, event):
