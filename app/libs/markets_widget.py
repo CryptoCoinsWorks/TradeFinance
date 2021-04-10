@@ -2,6 +2,7 @@
 import numpy as np
 from ui import markets_widget
 from PySide2 import QtWidgets
+from utils import constants as cst
 from libs.yahoo_fin import stock_info
 from libs.widgets.stackedwidget import StackedWidget
 
@@ -48,14 +49,14 @@ class MarketsWidgetItem(QtWidgets.QWidget, markets_widget.Ui_markets):
         except:
             return
 
-        day = float(x['adjclose'][-1])
-        prev_day = float(x['adjclose'][-2])
+        day = float(x[cst.ADJ_CLOSE_LOW][-1])
+        prev_day = float(x[cst.ADJ_CLOSE_LOW][-2])
 
         if np.isnan(prev_day):
-            if not np.isnan(x['adjclose'][-3]):
-                prev_day = float(x['adjclose'][-3])
+            if not np.isnan(x[cst.ADJ_CLOSE_LOW][-3]):
+                prev_day = float(x[cst.ADJ_CLOSE_LOW][-3])
             else:
-                prev_day = float(x['adjclose'][-4])
+                prev_day = float(x[cst.ADJ_CLOSE_LOW][-4])
 
         variation = ((day - prev_day) / prev_day) * 100
         variation = round(variation, 2)

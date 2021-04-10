@@ -1,5 +1,6 @@
 import pyqtgraph as pg
 
+from utils import constants as cst
 from utils.indicators_utils import Indicator, InputField, ChoiceField
 
 
@@ -14,7 +15,7 @@ class BollingerBands(Indicator):
 
         # Define and register all customisable settings
         field_input = ChoiceField(
-            "Input", choices=["Open", "Close", "High", "Low"], default="Close"
+            "Input", choices=[cst.OPEN, cst.CLOSE, cst.HIGH, cst.LOW], default="Close"
         )
         field_length = InputField("Length", value=20)
         field_middle = InputField("Middle", color=(0, 140, 170), width=1.2)
@@ -100,7 +101,7 @@ class BollingerBands(Indicator):
         self.g_filler = None
 
 
-def bollinger_bands(values, window=20, source="Close"):
+def bollinger_bands(values, window=20, source=cst.CLOSE):
     middle_band = values[source].rolling(window=window).mean()
     standard_deviation = values[source].rolling(window=window).std()
 

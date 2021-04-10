@@ -15,6 +15,7 @@ from libs.io.favorite_settings import FavoritesManager
 from libs.widgets.sentimentals_widget import Sentimental_Widget_Item
 from libs.splashcreen import SplashScreen
 from libs.roi_manager import ROIManager
+from utils import constants as cst
 
 from ui import main_window
 
@@ -22,7 +23,14 @@ from utils import utils
 from utils import decorators
 
 SCRIPT_PATH = os.path.dirname(__file__)
-TITLE = "TRADING VISUALISATION"
+
+"""
+THREADPOOL List TODO:
+ - Articles Welcomes + Ticker
+ - Markets Item Welcome Page
+ - Compagny Sentimental Welcome Page
+"""
+
 
 class MainWindow(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
     def __init__(self, parent=None, data=None):
@@ -31,7 +39,7 @@ class MainWindow(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
         img = "resources\img\splashscreen.jpg"
         path = os.path.join(SCRIPT_PATH, img)
 
-        self.splash = SplashScreen(path, TITLE)
+        self.splash = SplashScreen(path, cst.TITLE)
         # self.splash.show()
         self.splash.show_message("Loading UI...\n\n")
         QtWidgets.QApplication.processEvents()
@@ -79,23 +87,17 @@ class MainWindow(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
             self.wgt_company._on_ticker_infos
         )
         self.tickers_dialog.signal.sig_ticker_choosen.connect(
-            self.wgt_articles._on_get_articles
+            self._thread_articles
         )
-        # self.wgt_favorites.signals.sig_favorite_clicked.connect(
-        #     self._on_return_articles
-        # )
+        self.wgt_favorites.signals.sig_favorite_clicked.connect(
+            self._thread_articles
+        )
+        self.wgt_favorites.signals.sig_favorite_clicked.connect(
+            self._on_financials
+        )
         self.tickers_dialog.signal.sig_ticker_choosen.connect(
-            self.wid_table_financ.on_set_financials_table
+            self._on_financials
         )
-        self.tickers_dialog.signal.sig_ticker_choosen.connect(
-            self.set_sentiment_compagny
-        )
-        # self.wgt_favorites.signals.sig_favorite_clicked.connect(
-        #     self.wid_table_financ.on_set_financials_table
-        # )
-        # self.wgt_favorites.signals.sig_favorite_clicked.connect(
-        #     self.set_sentiment_compagny
-        # )
         self.thread_pool.signals.sig_thread_pre.connect(
             self.busy_indicator.show
         )
@@ -207,16 +209,22 @@ class MainWindow(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
         """
         utils.clear_layout(self.financials_layout)
         widget = Sentimental_Widget_Item()
-        widget.set_sentimental_ui(ticker=ticker)
+        self.thread_pool.execution(function=widget.set_sentimental_ui, ticker=ticker)
         self.financials_layout.addWidget(widget)
 
     @QtCore.Slot(str)
-    def _on_return_articles(self, ticker):
-        # self.thread_pool.execution(function=self._thread_articles, args=ticker)
-        self._thread_articles(ticker)
+    def _on_financials(self, ticker):
+        """Callback on ticker selected from favorites or ticker dialog.
+           Get the fundamentals and the sentiments from the ticker.
+        """
+        self.set_sentiment_compagny(ticker)
+        self.thread_pool.execution(function=self.wid_table_financ.on_set_financials_table, ticker=ticker)
 
     def _thread_articles(self, ticker):
-        self.wgt_articles._on_get_articles(ticker=ticker)
+        """This method get fundamentals in a threadpool.
+        """
+        print('Articles thread')
+        # self.thread_pool.execution(function=self.wgt_articles._on_get_articles, ticker=ticker)
 
     def resizeEvent(self, event):
         if self.tickers_dialog:

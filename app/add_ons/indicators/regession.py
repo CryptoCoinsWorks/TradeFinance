@@ -2,12 +2,12 @@ import pyqtgraph as pg
 import talib
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
 from utils import utils
 from pprint import pprint
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
 
+from utils import constants as cst
 from utils.indicators_utils import Indicator, InputField, ChoiceField
 
 
@@ -23,7 +23,7 @@ class RegressionLinear(Indicator):
 
         # Define and register all customisable settings
         field_input = ChoiceField(
-            "Input", choices=["Open", "Close", "High", "Low"], default="Close"
+            "Input", choices=[cst.OPEN, cst.CLOSE, cst.HIGH, cst.LOW], default=cst.CLOSE
         )
         field_base = InputField("Base", color=(255, 255, 255), width=2, disable_line_style=True)
         field_up = InputField("High", color=(38, 166, 154, 50), width=2, disable_line_style=True)

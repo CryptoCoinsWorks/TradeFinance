@@ -1,4 +1,5 @@
 import pyqtgraph as pg
+import numpy as np
 from PySide2 import QtCore, QtGui, QtWidgets
 
 from libs.graph.candlestick import CandlestickItem
