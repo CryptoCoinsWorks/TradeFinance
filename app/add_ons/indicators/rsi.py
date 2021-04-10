@@ -3,6 +3,7 @@ import pandas as pd
 
 from PySide2 import QtCore
 
+from utils import constants as cst
 from utils.indicators_utils import Indicator, InputField, ChoiceField
 
 
@@ -17,7 +18,7 @@ class RSI(Indicator):
 
         # Define and register all customisable settings
         field_input = ChoiceField(
-            "Input", choices=["Open", "Close", "High", "Low"], default="Close"
+            "Input", choices=[cst.OPEN, cst.CLOSE, cst.HIGH, cst.LOW], default="Close"
         )
         field_up = InputField(
             "Up", color=(200, 200, 200), width=1.5, line_style="dash-line"

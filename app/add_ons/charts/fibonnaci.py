@@ -2,6 +2,7 @@ import numpy as np
 import pyqtgraph as pg
 from PySide2 import QtCore, QtWidgets
 
+from utils import constants as cst
 from utils.indicators_utils import Indicator, InputField, ChoiceField
 
 COLORS = {
@@ -13,7 +14,7 @@ COLORS = {
 }
 
 
-class Fibonnaci(Indicator):
+class Fibonnaci(object):
     def __init__(self, parent=None):
         super(Fibonnaci, self).__init__()
         self.name = "Fibonnaci"

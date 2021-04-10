@@ -15,7 +15,10 @@ class ArticlesWidget(QtWidgets.QListWidget):
 
     @QtCore.Slot(str)
     def _on_get_articles(self, ticker):
+
+        print("ticker", ticker)
         articles = self._get_articles_dict(ticker=ticker)
+        print(articles)
         self.clear()
 
         for index, i in enumerate(articles):

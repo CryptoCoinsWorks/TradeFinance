@@ -1,5 +1,6 @@
-import pyqtgraph as pg
 import numpy as np
+import pyqtgraph as pg
+from utils import constants as cst
 from PySide2 import QtCore, QtGui, QtWidgets
 
 from libs.graph.candlestick import CandlestickItem
@@ -48,10 +49,10 @@ class GraphView(pg.GraphicsLayoutWidget):
         for index, (_time, _open, _close, _high, _low) in enumerate(
             zip(
                 data.index,
-                data["Open"].values,
-                data["Close"].values,
-                data["High"].values,
-                data["Low"].values,
+                data[cst.OPEN].values,
+                data[cst.CLOSE].values,
+                data[cst.HIGH].values,
+                data[cst.LOW].values,
             )
         ):
             ls_data.append((dates[index], _open, _close, _high, _low))
@@ -60,16 +61,16 @@ class GraphView(pg.GraphicsLayoutWidget):
         # self.g_quotation.enableAutoRange()
         self.set_time_x_axis(widget=self.g_quotation)
         self.set_y_axis(widget=self.g_quotation,
-                        data_close=data['Close'])
+                        data_close=data[cst.CLOSE])
 
-        price_variation = (np.amax(data['Close'])-np.amin(data['Close'])) / 2
+        price_variation = (np.amax(data[cst.CLOSE])-np.amin(data[cst.CLOSE])) / 2
 
         self.range_view = (dates[-240], dates[-1])
         self.g_quotation.setXRange(self.range_view[0], self.range_view[1])
         self.g_quotation.setLimits(xMin=dates[0]-10000000,
                                    xMax=dates[-1]+10000000,
-                                   yMin=np.amin(data['Close'])-price_variation,
-                                   yMax=np.amax(data['Close'])+price_variation,
+                                   yMin=np.amin(data[cst.CLOSE])-price_variation,
+                                   yMax=np.amax(data[cst.CLOSE])+price_variation,
                                    )
 
         self.set_cross_hair()
@@ -103,7 +104,7 @@ class GraphView(pg.GraphicsLayoutWidget):
         """Set Y Axis in Left and add Price.
         :param widget: GraphWidget
         :type widget: PQQt.GraphWidget
-        :param data_close: Data Price 'Close'
+        :param data_close: Data Price cst.CLOSE
         :type data_close: DataFrame
         """
         widget.showAxis('right')
