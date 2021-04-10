@@ -1,5 +1,5 @@
-import pyqtgraph as pg
 import numpy as np
+import pyqtgraph as pg
 from PySide2 import QtCore, QtGui, QtWidgets
 
 from libs.graph.candlestick import CandlestickItem
@@ -34,7 +34,6 @@ class GraphView(pg.GraphicsLayoutWidget):
 
     def plot_quotation(self, data, clear=True):
         """Plot the quotation
-
         :param data: The data to plot
         :type data: pd.dataframe
         :param clear: Clear the graph before plot, defaults to True
@@ -57,7 +56,6 @@ class GraphView(pg.GraphicsLayoutWidget):
             ls_data.append((dates[index], _open, _close, _high, _low))
         item = CandlestickItem(ls_data)
         self.g_quotation.addItem(item)
-        # self.g_quotation.enableAutoRange()
         self.set_time_x_axis(widget=self.g_quotation)
         self.set_y_axis(widget=self.g_quotation,
                         data_close=data['Close'])
@@ -109,7 +107,6 @@ class GraphView(pg.GraphicsLayoutWidget):
         widget.showAxis('right')
         axis = widget.getAxis('right')
         axis.setTicks([[(data_close[-1], str(round(data_close[-1], 2)))]])
-
 
     @QtCore.Slot(object)
     def _on_mouse_moved(self, event):

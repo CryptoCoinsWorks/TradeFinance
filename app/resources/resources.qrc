@@ -1,4 +1,4 @@
-<RCC>
+<!DOCTYPE RCC><RCC version="1.0">
   <qresource>
     <file>svg/candle-sticks.svg</file>
     <file>svg/info-line.svg</file>
@@ -8,6 +8,7 @@
     <file>svg/anchored-vwap.svg</file>
     <file>svg/trend-line.svg</file>
     <file>svg/search.svg</file>
+    <file>svg/fibo.svg</file>
     <file>svg/measure.svg</file>
     <file>svg/tail-spin.svg</file>
     <file>svg/window.svg</file>
