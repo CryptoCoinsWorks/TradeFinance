@@ -98,7 +98,7 @@
         "type": "button",
         "icon": {
             "type": "resources",
-            "value": ":/svg/brush.svg"
+            "value": ":/svg/fibo.svg"
         },
         "action": "roi_manager.set_tool",
         "args": {
