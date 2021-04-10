@@ -1,5 +1,6 @@
-import pyqtgraph as pg
 import numpy as np
+import pyqtgraph as pg
+from utils import constants as cst
 
 from scipy import signal
 
@@ -15,7 +16,7 @@ class ZigZag(Indicator):
 
         # Define and register all customisable settings
         field_input = ChoiceField(
-            "Input", choices=["Open", "Close", "High", "Low"], default="Close"
+            "Input", choices=[cst.OPEN, cst.CLOSE, cst.HIGH, cst.LOW], default=cst.CLOSE
         )
         field_zigzag = InputField("ZigZag", color=(33, 150, 243), width=2.5)
         self.register_fields(field_input, field_zigzag)

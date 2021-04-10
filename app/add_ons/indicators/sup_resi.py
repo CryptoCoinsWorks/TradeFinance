@@ -3,6 +3,7 @@ import numpy as np
 from pprint import pprint
 from scipy import signal
 from statistics import mean
+from utils import constants as cst
 
 from libs.indicators_widget import Indicator
 
@@ -21,8 +22,8 @@ class Support_Resistances(Indicator):
 
         # zigzag = zig_zag(values=values["close"].values)
 
-        supports = get_supports(values=values["Close"].values)
-        resistances = get_resistances(values=values["Close"].values)
+        supports = get_supports(values=values[cst.CLOSE].values)
+        resistances = get_resistances(values=values[cst.CLOSE].values)
 
         for sup in supports:
             quotation_plot.addLine(y=sup, pen=pg.mkPen("g", width=1))

@@ -1,6 +1,7 @@
 import numpy as np
 import pyqtgraph as pg
 
+from utils import constants as cst
 from utils.indicators_utils import Indicator, InputField, ChoiceField
 
 
@@ -13,7 +14,7 @@ class MMA(Indicator):
 
         # Define and register all customisable settings
         field_input = ChoiceField(
-            "Input", choices=["Open", "Close", "High", "Low"], default="Close"
+            "Input", choices=[cst.OPEN, cst.CLOSE, cst.HIGH, cst.LOW], default=cst.CLOSE
         )
         self.register_field(field_input)
         line1 = InputField(
@@ -71,7 +72,7 @@ class GuppyMMA(Indicator):
 
         # Define and register all customisable settings
         field_input = ChoiceField(
-            "Input", choices=["Open", "Close", "High", "Low"], default="Close"
+            "Input", choices=[cst.OPEN, cst.CLOSE, cst.HIGH, cst.LOW], default=cst.CLOSE
         )
         self.register_field(field_input)
         line1 = InputField(

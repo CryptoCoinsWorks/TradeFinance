@@ -2,6 +2,7 @@ import pyqtgraph as pg
 import numpy as np
 from pprint import pprint
 from scipy import signal
+from utils import constants as cst
 
 from libs.graph.bargraph import BarGraphItem
 from utils.indicators_utils import Indicator, InputField
@@ -57,7 +58,7 @@ class Volumes(Indicator):
 
         bars = BarGraphItem(
             x=[x.timestamp() for x in values.index],
-            height=values["Volume"].values,
+            height=values[cst.VOLUME].values,
             up_color=field_up.color,
             down_color=field_low.color,
             previous_offset=True,

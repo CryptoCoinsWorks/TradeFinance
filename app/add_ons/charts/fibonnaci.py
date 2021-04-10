@@ -2,6 +2,7 @@ import numpy as np
 import pyqtgraph as pg
 from PySide2 import QtCore, QtWidgets
 
+from utils import constants as cst
 from utils.indicators_utils import Indicator, InputField, ChoiceField
 
 COLORS = {
@@ -13,7 +14,7 @@ COLORS = {
 }
 
 
-class Fibonnaci(Indicator):
+class Fibonnaci(object):
     def __init__(self, parent=None):
         super(Fibonnaci, self).__init__()
         self.name = "Fibonnaci"
@@ -21,11 +22,12 @@ class Fibonnaci(Indicator):
 
     def run(self, graph=None, position=None):
         self.quotation_plot = graph
+        size_y = (graph.viewRange()[1][1] - graph.viewRange()[1][0]) / 2
         self.roi = pg.RectROI(pos=[position.x(), position.y()],
-                              size=[position.x() + 1, position.y()+1],
+                              size=(4000000.0, size_y),
                               invertible=True,
                               pen=pg.mkPen(color=(255, 255, 255),
-                                           width=1, ),
+                                           width=1),
                               hoverPen=None,
                               )
 

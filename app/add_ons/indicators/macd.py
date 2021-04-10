@@ -1,6 +1,7 @@
 import numpy as np
 import pyqtgraph as pg
 
+from utils import constants as cst
 from libs.graph.bargraph import BarGraphItem
 from utils.indicators_utils import Indicator, InputField, ChoiceField
 
@@ -18,7 +19,7 @@ class MACD(Indicator):
 
         # Define and register all customisable settings
         field_input = ChoiceField(
-            "Input", choices=["Open", "Close", "High", "Low"], default="Close"
+            "Input", choices=[cst.OPEN, cst.CLOSE, cst.HIGH, cst.LOW], default=cst.CLOSE
         )
         field_up = InputField(
             "Upper", color=(38, 166, 154), disable_line_style=True
@@ -191,8 +192,8 @@ def get_macd(values, w_low=12, w_fast=26):
 
 
 def MACD_strategy(values, w_ema=9, w_low=12, w_fast=26):
-    short_EMA = exp_moving_average(values["Close"], w=w_low)
-    long_EMA = exp_moving_average(values["Close"], w=w_fast)
+    short_EMA = exp_moving_average(values[cst.CLOSE], w=w_low)
+    long_EMA = exp_moving_average(values[cst.CLOSE], w=w_fast)
     macd = short_EMA - long_EMA
     signal = exp_moving_average(macd, w=w_ema)
     values["MACD"] = macd
@@ -210,7 +211,7 @@ def buy_sell_macd(values, offset=0.01):
     sell = []
     # if 2 lines cross Flag change
     flag = -1
-    ema200 = values["Close"].ewm(com=200).mean()
+    ema200 = values[cst.CLOSE].ewm(com=200).mean()
 
     for i in range(0, len(values)):
         if (
@@ -218,7 +219,7 @@ def buy_sell_macd(values, offset=0.01):
         ):  # and values['close'][i] > ema200[i]:
             sell.append(np.nan)
             if flag != 1:
-                buy.append(values["Close"][i] * offset_up)
+                buy.append(values[cst.CLOSE][i] * offset_up)
                 flag = 1
             else:
                 buy.append(np.nan)
@@ -228,7 +229,7 @@ def buy_sell_macd(values, offset=0.01):
         ):  # and values['close'][i] < ema200[i]:
             buy.append(np.nan)
             if flag != 0:
-                sell.append(values["Close"][i] * offset_down)
+                sell.append(values[cst.CLOSE][i] * offset_down)
                 flag = 0
             else:
                 sell.append(np.nan)
