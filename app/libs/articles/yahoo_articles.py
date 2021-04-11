@@ -6,13 +6,14 @@ import requests
 from bs4 import BeautifulSoup
 from utils import utils
 from pprint import pprint
-from libs.yahoo_fin import news
+from modules.yahoo_fin import news
+from libs.events_handler import EventHandler
 
 
 class ArticlesYahoo(object):
     def __init__(self):
         super(ArticlesYahoo, self).__init__()
-
+        self.signal = EventHandler()
         self.articles = None
 
     def get_articles_from_compagny(self, ticker):
@@ -27,6 +28,7 @@ class ArticlesYahoo(object):
             self.get_thumbnail_link(article)
             article['summary'] = self.cup_long_text(article['summary'])
 
+        self.signal.sig_thread_result.emit(self.articles)
         return self.articles
 
     def get_home_articles(self):
@@ -83,4 +85,4 @@ if __name__ == '__main__':
     x = ArticlesYahoo()
     # articles = x.get_articles_from_compagny(tick)
     articles = x.get_home_articles()
-    pprint(articles)
+    # pprint(articles)

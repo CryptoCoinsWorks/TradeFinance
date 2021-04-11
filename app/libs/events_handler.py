@@ -37,3 +37,5 @@ class EventHandler(QtCore.QObject):
     sig_graph_mouse_moved = QtCore.Signal(object)
     sig_graph_mouse_pressed = QtCore.Signal(object)
     sig_graph_mouse_released = QtCore.Signal(object)
+
+    sig_new_item = QtCore.Signal(object)

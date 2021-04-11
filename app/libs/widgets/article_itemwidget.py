@@ -6,13 +6,19 @@ from libs.thread_pool import ThreadPool
 from PySide2 import QtWidgets, QtCore, QtGui
 
 class ArticlesWidgetItem(QtWidgets.QWidget, Ui_Article):
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, article=None):
         super(ArticlesWidgetItem, self).__init__(parent)
         self.setupUi(self)
+
         self.thread_pool = ThreadPool()
         self.thread_pool.signals.sig_thread_result.connect(
             self._on_thumbnail_available
         )
+
+        self.set_title(article["title"], article["link"])
+        self.set_date(article["published"])
+        self.set_description(article["summary"])
+        self.set_thumbnail(article["img"])
 
     def set_compagny(self, text):
         """
@@ -48,12 +54,10 @@ class ArticlesWidgetItem(QtWidgets.QWidget, Ui_Article):
                 function=utils.get_image_from_url, url=link
             )
         else:
-            path = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
-            image = os.path.join(path, 'resources', 'img', "no_file.png")
-            image = QtGui.QPixmap(image)
-            # image = QtGui.QPixmap(":/img/no_file.png")
-            self._on_thumbnail_available(image)
-
+            # path = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+            # image = os.path.join(path, 'resources', 'img', "no_file.png")
+            # image = QtGui.QPixmap(image)
+            image = QtGui.QPixmap(":/img/no_file.png")
 
     @QtCore.Slot(object)
     def _on_thumbnail_available(self, image):

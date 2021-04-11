@@ -8,3 +8,5 @@ ADJ_CLOSE_LOW = "adjclose"
 HIGH = "High"
 LOW = "Low"
 VOLUME = "Volume"
+
+splashcreen = "resources\img\splashscreen.jpg"

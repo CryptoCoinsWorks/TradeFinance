@@ -1,10 +1,6 @@
 import requests
-from pprint import pprint
 from bs4 import BeautifulSoup
-import pandas as pd
-from libs.yahoo_fin import stock_info as sf
-
-from libs import yahoo_fin
+from modules.yahoo_fin import stock_info as sf
 
 
 class Articles(object):

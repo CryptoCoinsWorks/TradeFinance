@@ -17,7 +17,7 @@
 import datetime
 from pprint import pprint
 from utils import utils as utl
-from libs.yahoo_fin import stock_info as sf
+from modules.yahoo_fin import stock_info as sf
 from libs.analysies.analyse import AnalyseData
 
 

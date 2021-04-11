@@ -3,7 +3,7 @@ import numpy as np
 from ui import markets_widget
 from PySide2 import QtWidgets
 from utils import constants as cst
-from libs.yahoo_fin import stock_info
+from modules.yahoo_fin import stock_info
 from libs.widgets.stackedwidget import StackedWidget
 
 TICKERS = {
