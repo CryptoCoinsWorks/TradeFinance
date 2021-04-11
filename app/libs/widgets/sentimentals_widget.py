@@ -1,7 +1,7 @@
 from utils import utils
 from ui.sentimentals import Ui_Sentiment_Form
-from PySide2 import QtCore, QtGui, QtWidgets
-from libs.tradingview_ta import TA_Handler, Interval, Exchange
+from PySide2 import QtGui, QtWidgets
+from modules.tradingview_ta import TA_Handler, Interval
 
 TICKERS = ['TSLA', 'AAPL', 'MSFT', 'GLE.PA', 'FP.PA']
 

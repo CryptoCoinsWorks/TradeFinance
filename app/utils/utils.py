@@ -4,11 +4,10 @@ import random
 import datetime
 import urllib.request
 from statistics import mean
-from libs.yahoo_fin import stock_info as sf
+from modules.yahoo_fin import stock_info as sf
 
 from sklearn import preprocessing
 import numpy as np
-import pandas as pd
 from scipy import signal
 
 from PySide2.QtGui import QPixmap

@@ -1,7 +1,6 @@
 import sys
 import traceback
 from PySide2 import QtGui, QtCore, QtWidgets
-
 from libs.events_handler import EventHandler
 
 

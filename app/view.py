@@ -36,11 +36,10 @@ class MainWindow(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
     def __init__(self, parent=None, data=None):
         super(MainWindow, self).__init__(parent=parent)
 
-        img = "resources\img\splashscreen.jpg"
-        path = os.path.join(SCRIPT_PATH, img)
+        path = os.path.join(SCRIPT_PATH, cst.splashcreen)
 
         self.splash = SplashScreen(path, cst.TITLE)
-        # self.splash.show()
+        self.splash.show()
         self.splash.show_message("Loading UI...\n\n")
         QtWidgets.QApplication.processEvents()
 
@@ -209,7 +208,8 @@ class MainWindow(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
         """
         utils.clear_layout(self.financials_layout)
         widget = Sentimental_Widget_Item()
-        self.thread_pool.execution(function=widget.set_sentimental_ui, ticker=ticker)
+        self.thread_pool.execution(function=widget.set_sentimental_ui,
+                                   ticker=ticker)
         self.financials_layout.addWidget(widget)
 
     @QtCore.Slot(str)
@@ -218,19 +218,21 @@ class MainWindow(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
            Get the fundamentals and the sentiments from the ticker.
         """
         self.set_sentiment_compagny(ticker)
-        self.thread_pool.execution(function=self.wid_table_financ.on_set_financials_table, ticker=ticker)
+        self.thread_pool.execution(function=self.wid_table_financ.on_set_financials_table,
+                                   ticker=ticker)
 
     def _thread_articles(self, ticker):
         """This method get fundamentals in a threadpool.
         """
-        print('Articles thread')
-        # self.thread_pool.execution(function=self.wgt_articles._on_get_articles, ticker=ticker)
+        # pass
+        self.wgt_articles._on_get_articles(ticker=ticker)
 
     def resizeEvent(self, event):
         if self.tickers_dialog:
             self.tickers_dialog.move_to()
 
     def moveEvent(self, event):
+        self.tickers_dialog = None
         if self.tickers_dialog:
             ...
 
