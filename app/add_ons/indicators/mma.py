@@ -5,12 +5,12 @@ from utils import constants as cst
 from utils.indicators_utils import Indicator, InputField, ChoiceField
 
 
-class MMA(Indicator):
+class Expo_MMA(Indicator):
     def __init__(self):
-        super(MMA, self).__init__()
+        super(Expo_MMA, self).__init__()
 
-        self.name = "Moving Average (3, 5, 8, 10, 12, 15)"
-        self.description = "Multiple Moving Average (MMA)"
+        self.name = "Expo Moving Average (3, 5, 8, 10, 12, 15)"
+        self.description = "Expo Multiple Moving Average (MMA)"
 
         # Define and register all customisable settings
         field_input = ChoiceField(
@@ -38,7 +38,7 @@ class MMA(Indicator):
         self.register_fields(line1, line2, line3, line4, line5, line6)
 
     def create_indicator(self, graph_view, *args, **kwargs):
-        super(MMA, self).create_indicator(self, graph_view)
+        super(Expo_MMA, self).create_indicator(self, graph_view)
 
         # Get values
         values = graph_view.values
@@ -63,12 +63,12 @@ class MMA(Indicator):
             self.register_plot(plot=plot)
 
 
-class GuppyMMA(Indicator):
+class MMA(Indicator):
     def __init__(self):
-        super(GuppyMMA, self).__init__()
+        super(MMA, self).__init__()
 
-        self.name = "Guppy (3, 5, 8, 10, 12, 15) and (30, 35, 40, 45, 50, 60)"
-        self.description = "Guppy Multiple Moving Average (GMMA)"
+        self.name = "Moving Average (3, 5, 8, 10, 12, 15)"
+        self.description = "Moving Average (3, 5, 8, 10, 12, 15)"
 
         # Define and register all customisable settings
         field_input = ChoiceField(
@@ -116,7 +116,7 @@ class GuppyMMA(Indicator):
         self.register_fields(line7, line8, line9, line10, line11, line12)
 
     def create_indicator(self, graph_view, *args, **kwargs):
-        super(GuppyMMA, self).create_indicator(self, graph_view)
+        super(MMA, self).create_indicator(self, graph_view)
 
         # Get values
         values = graph_view.values
@@ -130,7 +130,7 @@ class GuppyMMA(Indicator):
                 # Escape ChoiceFields
                 continue
             # TODO need pass this to EMA instead of MMA
-            mva = values[field_input.current].ewm(com=field.value).mean()
+            mva = values[field_input.current].rolling(com=field.value).mean()
             plot = quotation_plot.plot(
                 x=[x.timestamp() for x in values.index],
                 y=mva,
@@ -140,24 +140,3 @@ class GuppyMMA(Indicator):
                 ),
             )
             self.register_plot(plot=plot)
-
-
-def rolling_mean(values, length):
-    """Find the rolling mean for the given data dans the given length
-
-    :param values: All values to analyse
-    :type values: np.array
-    :param length: The length to calculate the mean
-    :type length: int
-    :return: The rolling mean
-    :rtype: np.array
-    """
-    ret = np.cumsum(values, dtype=float)
-    ret[length:] = ret[length:] - ret[:-length]
-    mva = ret[length - 1 :] / length
-
-    # Padding
-    padding = np.array([np.nan for i in range(length)])
-    mva = np.append(padding, mva)
-
-    return mva

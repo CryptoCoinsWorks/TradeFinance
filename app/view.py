@@ -11,6 +11,7 @@ from libs.events_handler import EventHandler
 from libs.tickers_dialog import TickersDialogWindow
 from libs.widgets.busywidget import BusyIndicator
 from libs.thread_pool import ThreadPool
+from libs.io.order_setting import OrderSettings
 from libs.io.favorite_settings import FavoritesManager
 from libs.widgets.sentimentals_widget import Sentimental_Widget_Item
 from libs.splashcreen import SplashScreen
@@ -57,6 +58,7 @@ class MainWindow(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
         self.thread_pool = ThreadPool()
         self.signals = EventHandler()
         self.favorites_manager = FavoritesManager(parent=self)
+        self.orders_manager = OrderSettings(parent=self)
         self.roi_manager = ROIManager(parent=self)
 
         # Signals
@@ -84,6 +86,9 @@ class MainWindow(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
         )
         self.signals.sig_ticker_infos_fetched.connect(
             self.wgt_company._on_ticker_infos
+        )
+        self.signals.sig_data.connect(
+            self.wgt_order.get_data
         )
         self.tickers_dialog.signal.sig_ticker_choosen.connect(
             self._thread_articles
@@ -115,9 +120,13 @@ class MainWindow(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
         self.favorites_manager.signals.sig_favorite_loaded.connect(
             self.wgt_favorites._on_favorite_loaded
         )
-        self.favorites_manager.signals.sig_favorite_loaded.connect(
-            self.tickers_dialog._on_favorite_loaded
+        self.wgt_order.signals.sig_order_added.connect(
+            self.orders_manager.save_orders
         )
+        self.wgt_order.signals.sig_order_close.connect(
+            self.orders_manager.close_order
+        )
+
 
         self.pub_go_welcome.clicked.connect(self.stw_main.slide_in_prev)
         self.pub_go_graph.clicked.connect(self.stw_main.slide_in_next)
@@ -133,7 +142,7 @@ class MainWindow(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
     def _init_app_home(self):
         """Init the APP_HOME of the application"""
         base_path = os.path.expanduser("~")
-        app_home = os.path.join(base_path, ".trade_helper")
+        app_home = os.path.join(base_path, ".trade_finance")
         if not os.path.exists(app_home):
             try:
                 os.makedirs(app_home)
@@ -143,10 +152,12 @@ class MainWindow(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
 
     def _retrieve_data(self):
         """Retrieve data from the API"""
-        ticker = yf.Ticker(self.lie_ticker.text())
+        tick = self.lie_ticker.text()
+        ticker = yf.Ticker(tick)
         self.signals.sig_ticker_infos_fetched.emit(ticker.info)
         data = ticker.history(period="1y", interval="1d", start="2018-01-01")
         self.signals.sig_ticker_data_fetched.emit(data)
+        self.signals.sig_data.emit(tick, data)
 
     @QtCore.Slot(object)
     def _on_process_ticker_data(self, data):
@@ -165,6 +176,7 @@ class MainWindow(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
             indicator.create_indicator(graph_view=self.wgt_graph.graph)
         if self.stw_main.currentIndex() == 0:
             self.stw_main.slide_in_next()
+        self.orders_manager.load_orders()
 
     @QtCore.Slot(str)
     def _on_ticker_selected(self, ticker_name: str):

@@ -1,5 +1,6 @@
 import os
 import json
+import uuid
 import random
 import datetime
 import urllib.request
@@ -39,6 +40,7 @@ def savgol_filter(values, window_length, polyorder=3):
         mode="interp",
     )
 
+
 def remove_nan(data):
     """
     This method replace Nan value by 0.
@@ -52,7 +54,6 @@ def remove_nan(data):
             i = 0
         data_format.append(float(i))
     return data_format
-
 
 
 def _peaks_detection(values, rounded=3, direction="up"):
@@ -246,7 +247,6 @@ def get_main_window_instance(name: str = "MainWindow"):
     return None
 
 
-
 def get_all_tickers():
     """
     This method return a dict of all the compagny for each markets.
@@ -269,6 +269,35 @@ def get_all_tickers():
     return data
 
 
+def exp_moving_average(values, w):
+    weights = np.exp(np.linspace(-1.0, 0.0, w))
+    weights /= weights.sum()
+    a = np.convolve(values, weights, mode="full")[: len(values)]
+    a[:w] = a[w]
+    return a
+
+
+def rolling_mean(values, length):
+    """Find the rolling mean for the given data dans the given length
+
+    :param values: All values to analyse
+    :type values: np.array
+    :param length: The length to calculate the mean
+    :type length: int
+    :return: The rolling mean
+    :rtype: np.array
+    """
+    ret = np.cumsum(values, dtype=float)
+    ret[length:] = ret[length:] - ret[:-length]
+    mva = ret[length - 1:] / length
+
+    # Padding
+    padding = np.array([np.nan for i in range(length)])
+    mva = np.append(padding, mva)
+
+    return mva
+
+
 def get_compagny_name_from_tick(ticker):
     """
     This method return the Compagny name for his ticker.
@@ -280,6 +309,7 @@ def get_compagny_name_from_tick(ticker):
         if ticker.startswith(tick):
             return company
 
+
 def get_last_value(data):
     if data[0] != 0:
         index = 0
@@ -288,6 +318,7 @@ def get_last_value(data):
         index = 1
         value = data[index]
     return value, index
+
 
 def format_data(data):
     """
@@ -312,6 +343,7 @@ def get_rdm_tickers(qty=5):
     tickers = random.sample(all_tickers, qty)
     return tickers
 
+
 def check_french_ticker(ticker):
     """This method split the ticker if endswith '.PA'
     :return: str
@@ -323,6 +355,7 @@ def check_french_ticker(ticker):
 
     return ticker
 
+
 def clear_layout(layout):
     """
     This method remove all widgets inside a layout.
@@ -330,3 +363,22 @@ def clear_layout(layout):
     """
     for i in reversed(range(layout.count())):
         layout.itemAt(i).widget().setParent(None)
+
+
+def set_id():
+    id = uuid.uuid1().node
+    if all_ids(id):
+        set_id()
+    return id
+
+
+def all_ids(id):
+    _app_home = os.environ.get("APP_HOME")
+    _orders_path = os.path.join(
+        _app_home, "orders", "orders.json"
+    )
+    with open(_orders_path, "r") as f:
+        orders = json.load(f)
+    for order in orders:
+        if id == order['id']:
+            return True

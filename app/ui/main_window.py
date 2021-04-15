@@ -24,6 +24,7 @@ from libs.financial_widget import TableFinance
 from libs.welcome_widget import WelcomeWidget
 from libs.markets_widget import MarketsWidget
 from libs.widgets.sentimentals_widget import Sentimental_Widget
+from libs.order import OrderView
 
 import resources_rc
 
@@ -258,10 +259,16 @@ class Ui_MainWindow(object):
         self.dock_wgt_favorites = QDockWidget(MainWindow)
         self.dock_wgt_favorites.setObjectName(u"dock_wgt_favorites")
         self.dock_wgt_favorites.setFont(font)
+        self.wgt_order = OrderView()
+        self.wgt_order.setObjectName(u"wgt_order")
+        self.dock_wgt_favorites.setWidget(self.wgt_order)
+        MainWindow.addDockWidget(Qt.RightDockWidgetArea, self.dock_wgt_favorites)
+        self.dock_wgt_order = QDockWidget(MainWindow)
+        self.dock_wgt_order.setObjectName(u"dock_wgt_order")
         self.wgt_favorites = FavoritesWidget()
         self.wgt_favorites.setObjectName(u"wgt_favorites")
-        self.dock_wgt_favorites.setWidget(self.wgt_favorites)
-        MainWindow.addDockWidget(Qt.RightDockWidgetArea, self.dock_wgt_favorites)
+        self.dock_wgt_order.setWidget(self.wgt_favorites)
+        MainWindow.addDockWidget(Qt.RightDockWidgetArea, self.dock_wgt_order)
 
         self.menubar.addAction(self.menuOptions.menuAction())
         self.menuOptions.addAction(self.action_reload_indicators)
@@ -288,6 +295,7 @@ class Ui_MainWindow(object):
         self.dock_wgt_company.setWindowTitle(QCoreApplication.translate("MainWindow", u"Company", None))
         self.dock_wgt_indicators.setWindowTitle(QCoreApplication.translate("MainWindow", u"Indicators", None))
         self.tool_bar.setWindowTitle(QCoreApplication.translate("MainWindow", u"toolBar", None))
-        self.dock_wgt_favorites.setWindowTitle(QCoreApplication.translate("MainWindow", u"Favorites", None))
+        self.dock_wgt_favorites.setWindowTitle(QCoreApplication.translate("MainWindow", u"Order", None))
+        self.dock_wgt_order.setWindowTitle(QCoreApplication.translate("MainWindow", u"Favorites", None))
     # retranslateUi
 

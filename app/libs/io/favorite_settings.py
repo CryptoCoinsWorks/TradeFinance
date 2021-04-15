@@ -13,6 +13,7 @@ class FavoritesManager(QtCore.QObject):
         # Constants
         self.signals = EventHandler()
         self._app_home = os.environ.get("APP_HOME")
+
         self._favorites_path = os.path.join(
             self._app_home, "favorite", "favorite.json"
         )

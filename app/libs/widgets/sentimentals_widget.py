@@ -1,9 +1,11 @@
 from utils import utils
+from utils import constants as cst
+from PySide2 import QtGui, QtWidgets, QtCore
+from libs.thread_pool import ThreadPool
+from libs.thread_list import FillListThread
+from libs.events_handler import EventHandler
 from ui.sentimentals import Ui_Sentiment_Form
-from PySide2 import QtGui, QtWidgets
 from modules.tradingview_ta import TA_Handler, Interval
-
-TICKERS = ['TSLA', 'AAPL', 'MSFT', 'GLE.PA', 'FP.PA']
 
 LVLS = {
     "STRONG_SELL": 10,
@@ -13,16 +15,26 @@ LVLS = {
     "STRONG_BUY": 90,
 }
 
-
 class Sentimental_Widget(QtWidgets.QWidget):
     def __init__(self, parent=None, ticker=None):
         super(Sentimental_Widget, self).__init__(parent=parent)
 
-        layout = QtWidgets.QVBoxLayout(self)
+        self.layout = QtWidgets.QVBoxLayout(self)
 
-        # for ticker in TICKERS:
-        #     item = self.get_widget_items(ticker)
-        #     layout.addWidget(item)
+        self.signals = EventHandler()
+        self.thread_pool = ThreadPool()
+
+        # self.thread_list = FillListThread(articles=cst.TICKERS_SENTIMENTALS)
+        # self.thread_list.start()
+        # self.thread_list.signal.sig_new_item.connect(self.get_widget_in_stack)
+        # for ticker in cst.TICKERS_SENTIMENTALS:
+        #     self.get_widget_in_stack(ticker)
+
+
+    @QtCore.Slot(str)
+    def get_widget_in_stack(self, ticker):
+        item = self.get_widget_items(ticker)
+        self.layout.addWidget(item)
 
     def get_widget_items(self, tick):
         widget = Sentimental_Widget_Item()

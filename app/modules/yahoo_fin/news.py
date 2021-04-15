@@ -1,4 +1,5 @@
 import feedparser
+from pprint import pprint
 
 yf_rss_url = "https://feeds.finance.yahoo.com/rss/2.0/headline?s=%s&region=FR&lang=fr-FR"
 home_page = "https://finance.yahoo.com/news/rssr/2.0/"

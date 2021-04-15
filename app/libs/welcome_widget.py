@@ -15,14 +15,12 @@ class WelcomeWidget(QtWidgets.QListWidget):
     def __init__(self, parent=None):
         super(WelcomeWidget, self).__init__(parent)
 
-        # articles = self._get_articles_dict()[:5]
-        #
-        # for index, i in enumerate(articles):
-        #     article = ArticlesWidgetItem(parent=self)
-        #     article.set_title(i["title"], i["link"])
-        #     article.set_date(i["published"])
-        #     article.set_description(i["summary"])
-        #     article.set_thumbnail(i["img"])
+        articles = self._get_articles_dict()[:5]
+
+        # for index, article in enumerate(articles):
+        #     article = ArticlesWidgetItem(parent=self,
+        #                                  article=article
+        #                                  )
         #     item = QtWidgets.QListWidgetItem()
         #     item.setSizeHint(article.sizeHint())
         #     self.addItem(item)
