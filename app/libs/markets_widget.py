@@ -1,42 +1,37 @@
-
 import numpy as np
 from ui import markets_widget
 from PySide2 import QtWidgets
 from utils import constants as cst
 from modules.yahoo_fin import stock_info
+from libs.thread_pool import ThreadPool
+from libs.events_handler import EventHandler
 from libs.widgets.stackedwidget import StackedWidget
 
-TICKERS = {
-    "NASDAQ": "%5EIXIC",
-    "S&P 500": "%5EGSPC",
-    "Dow Jones": "%5EDJI",
-    "Oil": "CL%3DF",
-    "BTC": "BTC-USD",
-    "ETH": "ETH-USD",
-    "EUR/USD": "EURUSD%3DX",
-    "GBP/USD": "GBPUSD%3DX",
-    "Gold": "GC%3DF",
-}
+
 
 class MarketsWidget(StackedWidget):
     """
     Markets are the informations in the Welcome Page showing price and
     variation from day before.
     """
+
     def __init__(self, parent=None):
         super(MarketsWidget, self).__init__(parent)
+
+        self.signal = EventHandler()
+        self.thread_pool = ThreadPool()
 
         page = QtWidgets.QWidget()
         layout = QtWidgets.QHBoxLayout(page)
 
-        for count, (name, tick) in enumerate(TICKERS.items()):
-            if count % 5 == 0:
-                page = QtWidgets.QWidget()
-                layout = QtWidgets.QHBoxLayout(page)
-            item = MarketsWidgetItem(self, ticker=tick, compagny=name)
-            layout.addWidget(item)
-
-            self.addWidget(page)
+        # for count, (name, tick) in enumerate(cst.TICKERS_MARKETS.items()):
+        #     if count % 5 == 0:
+        #         page = QtWidgets.QWidget()
+        #         layout = QtWidgets.QHBoxLayout(page)
+        #     item = MarketsWidgetItem(self, ticker=tick, compagny=name)
+        #     layout.addWidget(item)
+        #
+        #     self.addWidget(page)
 
 
 class MarketsWidgetItem(QtWidgets.QWidget, markets_widget.Ui_markets):
@@ -45,18 +40,18 @@ class MarketsWidgetItem(QtWidgets.QWidget, markets_widget.Ui_markets):
 
         self.setupUi(self)
         try:
-            x = stock_info.get_data(ticker)
+            stock = stock_info.get_data(ticker)
         except:
             return
 
-        day = float(x[cst.ADJ_CLOSE_LOW][-1])
-        prev_day = float(x[cst.ADJ_CLOSE_LOW][-2])
+        day = float(stock[cst.ADJ_CLOSE_LOW][-1])
+        prev_day = float(stock[cst.ADJ_CLOSE_LOW][-2])
 
         if np.isnan(prev_day):
-            if not np.isnan(x[cst.ADJ_CLOSE_LOW][-3]):
-                prev_day = float(x[cst.ADJ_CLOSE_LOW][-3])
+            if not np.isnan(stock[cst.ADJ_CLOSE_LOW][-3]):
+                prev_day = float(stock[cst.ADJ_CLOSE_LOW][-3])
             else:
-                prev_day = float(x[cst.ADJ_CLOSE_LOW][-4])
+                prev_day = float(stock[cst.ADJ_CLOSE_LOW][-4])
 
         variation = ((day - prev_day) / prev_day) * 100
         variation = round(variation, 2)
@@ -69,6 +64,3 @@ class MarketsWidgetItem(QtWidgets.QWidget, markets_widget.Ui_markets):
             self.pourcentage.setStyleSheet("color:rgb(239, 83, 80);")
         else:
             self.pourcentage.setStyleSheet("color:rgb(38, 166, 154);")
-
-
-

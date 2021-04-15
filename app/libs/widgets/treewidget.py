@@ -35,6 +35,8 @@ class TreeWidget(QtWidgets.QTreeWidget):
         :type column: int, optional
         """
         found = self.findItems(text, QtCore.Qt.MatchContains, column)
+        found_column_1 = self.findItems(text, QtCore.Qt.MatchContains, 1)
+        found.extend(found_column_1)
         all_items = self.get_all_items(self.invisibleRootItem())
         # Hide all items
         for item in all_items:

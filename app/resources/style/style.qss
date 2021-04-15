@@ -223,10 +223,24 @@ QListWidget#wdg_article_welcome,#wgt_articles,#lst_inputs {
 }
 
 /* QPushButton */
-QPushButton#pub_cancel,#pub_ok,#pub_reset{
+QPushButton#pub_cancel,#pub_ok,#pub_reset,#btn_order{
     background: palette(midlight);
     height:20px;
     border-radius:3px;
+}
+
+QPushButton#buy_btn{
+    background: green;
+    height:20px;
+    border-radius:3px;
+    color:white;
+}
+
+QPushButton#sell_btn{
+    background: red;
+    height:20px;
+    border-radius:3px;
+    color:white;
 }
 
 /* QComboBox */
@@ -257,3 +271,4 @@ QSpinBox{
 SetSysColors{
     border: 1px solid black;
 }
+

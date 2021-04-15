@@ -1,6 +1,7 @@
 import numpy as np
 import pyqtgraph as pg
 
+from utils import utils
 from utils import constants as cst
 from libs.graph.bargraph import BarGraphItem
 from utils.indicators_utils import Indicator, InputField, ChoiceField
@@ -176,26 +177,17 @@ class MACD(Indicator):
         """
         widget.setAxisItems({"bottom": pg.DateAxisItem(orientation="bottom")})
 
-
-def exp_moving_average(values, w):
-    weights = np.exp(np.linspace(-1.0, 0.0, w))
-    weights /= weights.sum()
-    a = np.convolve(values, weights, mode="full")[: len(values)]
-    a[:w] = a[w]
-    return a
-
-
 def get_macd(values, w_low=12, w_fast=26):
-    emaslow = exp_moving_average(values, w=w_low)
-    emafast = exp_moving_average(values, w=w_fast)
+    emaslow = utils.exp_moving_average(values, w=w_low)
+    emafast = utils.exp_moving_average(values, w=w_fast)
     return emaslow, emafast, emaslow - emafast
 
 
 def MACD_strategy(values, w_ema=9, w_low=12, w_fast=26):
-    short_EMA = exp_moving_average(values[cst.CLOSE], w=w_low)
-    long_EMA = exp_moving_average(values[cst.CLOSE], w=w_fast)
+    short_EMA = utils.exp_moving_average(values[cst.CLOSE], w=w_low)
+    long_EMA = utils.exp_moving_average(values[cst.CLOSE], w=w_fast)
     macd = short_EMA - long_EMA
-    signal = exp_moving_average(macd, w=w_ema)
+    signal = utils.exp_moving_average(macd, w=w_ema)
     values["MACD"] = macd
     values["Signal"] = signal
     retournement = buy_sell_macd(values)

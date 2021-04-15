@@ -43,7 +43,7 @@ class ArticlesYahoo(object):
             try:
                 article['img'] = article['media_content'][0]['url']
             except:
-                article['img'] = ""
+                article['img'] = None
 
 
         return self.articles
@@ -81,8 +81,9 @@ class ArticlesYahoo(object):
 
 
 if __name__ == '__main__':
-    tick = "MSFT"
+    tick = "AAL"
+    tick = "GLE.PA"
     x = ArticlesYahoo()
-    # articles = x.get_articles_from_compagny(tick)
-    articles = x.get_home_articles()
-    # pprint(articles)
+    articles = x.get_articles_from_compagny(tick)
+    # articles = x.get_home_articles()
+    pprint(articles)

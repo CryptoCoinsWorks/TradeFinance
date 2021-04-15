@@ -1,9 +1,9 @@
-
 import os
 from utils import utils
 from ui.article import Ui_Article
 from libs.thread_pool import ThreadPool
 from PySide2 import QtWidgets, QtCore, QtGui
+
 
 class ArticlesWidgetItem(QtWidgets.QWidget, Ui_Article):
     def __init__(self, parent=None, article=None):
@@ -54,10 +54,11 @@ class ArticlesWidgetItem(QtWidgets.QWidget, Ui_Article):
                 function=utils.get_image_from_url, url=link
             )
         else:
-            # path = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
-            # image = os.path.join(path, 'resources', 'img', "no_file.png")
-            # image = QtGui.QPixmap(image)
-            image = QtGui.QPixmap(":/img/no_file.png")
+            image = QtGui.QPixmap(":/img/no_file.png").scaled(self.size(),
+                                                              QtCore.Qt.KeepAspectRatio,
+                                                              QtCore.Qt.SmoothTransformation
+                                                              )
+            self.thumbnail.setPixmap(image)
 
     @QtCore.Slot(object)
     def _on_thumbnail_available(self, image):
@@ -71,5 +72,3 @@ class ArticlesWidgetItem(QtWidgets.QWidget, Ui_Article):
                              QtCore.Qt.SmoothTransformation
                              )
         self.thumbnail.setPixmap(image)
-
-
