@@ -14,7 +14,6 @@ class OrderView(QtWidgets.QWidget, Ui_Form):
         super(OrderView, self).__init__(parent=parent)
 
         self.signals = EventHandler()
-        # self.order_manager = OrderSettings()
 
         self.setupUi(self)
         self.order_wgt.setStyleSheet('background-color: rgb(43, 43, 43);')
@@ -25,9 +24,8 @@ class OrderView(QtWidgets.QWidget, Ui_Form):
         self.data = None
         self.ticker = None
 
-        # self.buy_btn.clicked.connect(self.set_buy)
+        self.buy_btn.clicked.connect(self.set_buy)
         self.sell_btn.clicked.connect(self.set_sell)
-        self.buy_btn.clicked.connect(self.delete_order)
         self.btn_order.clicked.connect(self.place_order)
 
         self.set_ui()
@@ -106,7 +104,7 @@ class OrderView(QtWidgets.QWidget, Ui_Form):
     def set_total(self, total=0):
         self.lb_price.setText("%s €" % total)
 
-    def _build_order(self, amount, order_type, order_exec, limit=None, stop=None, timing=None):
+    def _build_order(self, amount, order_type, order_exec, limit="", stop="", timing=""):
         order = {
             "ticker": self.ticker,
             "order_type": order_type,
@@ -120,6 +118,3 @@ class OrderView(QtWidgets.QWidget, Ui_Form):
         }
         self.signals.sig_order_added.emit(order)
 
-    def delete_order(self):
-        i = 24720
-        self.signals.sig_order_close.emit(i)

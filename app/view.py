@@ -123,10 +123,12 @@ class MainWindow(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
         self.wgt_order.signals.sig_order_added.connect(
             self.orders_manager.save_orders
         )
-        self.wgt_order.signals.sig_order_close.connect(
+        self.wgt_order_list.signals.sig_order_close.connect(
             self.orders_manager.close_order
         )
-
+        self.orders_manager.signals.sig_order_loaded.connect(
+            self.wgt_order_list._load_positions
+        )
 
         self.pub_go_welcome.clicked.connect(self.stw_main.slide_in_prev)
         self.pub_go_graph.clicked.connect(self.stw_main.slide_in_next)
@@ -136,6 +138,7 @@ class MainWindow(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
         # Action which needs to be loaded after all signals
         self.splash.show_message("Loading Favorites...\n\n")
         self.favorites_manager.load_favorite()
+        self.orders_manager.load_position()
 
         self.splash.hide()
 
@@ -176,7 +179,6 @@ class MainWindow(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
             indicator.create_indicator(graph_view=self.wgt_graph.graph)
         if self.stw_main.currentIndex() == 0:
             self.stw_main.slide_in_next()
-        self.orders_manager.load_orders()
 
     @QtCore.Slot(str)
     def _on_ticker_selected(self, ticker_name: str):

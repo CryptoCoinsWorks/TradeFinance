@@ -366,13 +366,13 @@ def clear_layout(layout):
 
 
 def set_id():
-    id = uuid.uuid1().node
+    id = random.SystemRandom().randint(1, 999)
     if all_ids(id):
         set_id()
     return id
 
 
-def all_ids(id):
+def all_ids(uiid):
     _app_home = os.environ.get("APP_HOME")
     _orders_path = os.path.join(
         _app_home, "orders", "orders.json"
@@ -380,5 +380,30 @@ def all_ids(id):
     with open(_orders_path, "r") as f:
         orders = json.load(f)
     for order in orders:
-        if id == order['id']:
+        if uiid == order['id']:
             return True
+        else:
+            return False
+
+def load_orders(path):
+    """Load orders from the file
+
+    :return: The loaded favorite
+    :rtype: list
+    """
+    order = []
+    if not _check_orders(path):
+        return order
+    with open(path, "r") as f:
+        order = json.load(f)
+    return order
+
+def _check_orders(path):
+    """Check if the favorite file exists
+
+    :return: True or False
+    :rtype: bool
+    """
+    if os.path.exists(path):
+        return True
+    return False
