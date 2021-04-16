@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>998</width>
-    <height>754</height>
+    <width>996</width>
+    <height>825</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -362,7 +362,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>998</width>
+     <width>996</width>
      <height>21</height>
     </rect>
    </property>
@@ -446,6 +446,15 @@
    </attribute>
    <widget class="FavoritesWidget" name="wgt_favorites"/>
   </widget>
+  <widget class="QDockWidget" name="dock_wgt_order_list">
+   <property name="windowTitle">
+    <string>Positions</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>8</number>
+   </attribute>
+   <widget class="OrderList" name="wgt_order_list"/>
+  </widget>
   <action name="action_reload_indicators">
    <property name="text">
     <string>Reload Indicators</string>
@@ -524,7 +533,13 @@
   <customwidget>
    <class>OrderView</class>
    <extends>QWidget</extends>
-   <header>libs.order.h</header>
+   <header>libs.widgets.order_widget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>OrderList</class>
+   <extends>QWidget</extends>
+   <header>libs.widgets.orders_list_widget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

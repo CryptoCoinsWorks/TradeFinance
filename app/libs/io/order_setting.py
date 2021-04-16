@@ -1,6 +1,5 @@
 import os
 import json
-
 from utils import utils
 from pprint import pprint
 from PySide2 import QtCore
@@ -12,34 +11,17 @@ class OrderSettings(QtCore.QObject):
         super(OrderSettings, self).__init__(parent)
 
         # Constants
-        self.signals = EventHandler()
         self._app_home = os.environ.get("APP_HOME")
         self._orders_path = os.path.join(
             self._app_home, "orders", "orders.json"
         )
-        self.orders = self.load_orders()
-        self.signals.sig_order_added.connect(
-            self.save_orders
-        )
-        self.signals.sig_order_close.connect(
-            self.close_order
-        )
+        self.signals = EventHandler()
 
-    def load_orders(self) -> list:
-        """Load orders from the file
-
-        :return: The loaded favorite
-        :rtype: list
-        """
-        self.orders = []
-        if not self._check_orders():
-            return self.orders
-        with open(self._orders_path, "r") as f:
-            self.orders = json.load(f)
-        return self.orders
+    def load_position(self):
+        self.orders = utils.load_orders(self._orders_path)
+        self.signals.sig_order_loaded.emit(self.orders)
 
     QtCore.Signal(dict)
-
     def save_orders(self, order):
         order["id"] = utils.set_id()
         self.orders.append(order)
@@ -47,7 +29,7 @@ class OrderSettings(QtCore.QObject):
 
     def _save_orders(self):
         """Save favorites into the file"""
-        if not self._check_orders():
+        if not utils._check_orders(self._orders_path):
             self.create_order()
         with open(self._orders_path, "w") as f:
             json.dump(self.orders, f, indent=4)
@@ -73,20 +55,11 @@ class OrderSettings(QtCore.QObject):
         # self.signals.sig_favorite_created.emit(self._favorites)
         return True
 
-    def _check_orders(self):
-        """Check if the favorite file exists
-
-        :return: True or False
-        :rtype: bool
-        """
-        if os.path.exists(self._orders_path):
-            return True
-        return False
-
     QtCore.Slot(int)
     def close_order(self, id):
-        print('id', id)
-        self.orders = self.load_orders()
+        """This method delete the position from the file.
+        """
+        self.orders = utils.load_orders(self._orders_path)
         for index, i in enumerate(self.orders):
             if i['id'] == id:
                 self.orders.pop(index)

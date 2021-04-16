@@ -32,6 +32,7 @@ class EventHandler(QtCore.QObject):
     sig_favorite_clicked = QtCore.Signal(str)
 
     sig_order_added = QtCore.Signal(dict)
+    sig_order_loaded = QtCore.Signal(list)
     sig_order_close = QtCore.Signal(int)
 
     sig_articles = QtCore.Signal(dict)

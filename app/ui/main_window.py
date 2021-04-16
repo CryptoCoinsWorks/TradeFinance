@@ -24,7 +24,8 @@ from libs.financial_widget import TableFinance
 from libs.welcome_widget import WelcomeWidget
 from libs.markets_widget import MarketsWidget
 from libs.widgets.sentimentals_widget import Sentimental_Widget
-from libs.order import OrderView
+from libs.widgets.order_widget import OrderView
+from libs.widgets.orders_list_widget import OrderList
 
 import resources_rc
 
@@ -32,7 +33,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(998, 754)
+        MainWindow.resize(996, 825)
         self.action_reload_indicators = QAction(MainWindow)
         self.action_reload_indicators.setObjectName(u"action_reload_indicators")
         self.centralwidget = QWidget(MainWindow)
@@ -224,7 +225,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 998, 21))
+        self.menubar.setGeometry(QRect(0, 0, 996, 21))
         self.menuOptions = QMenu(self.menubar)
         self.menuOptions.setObjectName(u"menuOptions")
         MainWindow.setMenuBar(self.menubar)
@@ -269,6 +270,12 @@ class Ui_MainWindow(object):
         self.wgt_favorites.setObjectName(u"wgt_favorites")
         self.dock_wgt_order.setWidget(self.wgt_favorites)
         MainWindow.addDockWidget(Qt.RightDockWidgetArea, self.dock_wgt_order)
+        self.dock_wgt_order_list = QDockWidget(MainWindow)
+        self.dock_wgt_order_list.setObjectName(u"dock_wgt_order_list")
+        self.wgt_order_list = OrderList()
+        self.wgt_order_list.setObjectName(u"wgt_order_list")
+        self.dock_wgt_order_list.setWidget(self.wgt_order_list)
+        MainWindow.addDockWidget(Qt.BottomDockWidgetArea, self.dock_wgt_order_list)
 
         self.menubar.addAction(self.menuOptions.menuAction())
         self.menuOptions.addAction(self.action_reload_indicators)
@@ -297,5 +304,6 @@ class Ui_MainWindow(object):
         self.tool_bar.setWindowTitle(QCoreApplication.translate("MainWindow", u"toolBar", None))
         self.dock_wgt_favorites.setWindowTitle(QCoreApplication.translate("MainWindow", u"Order", None))
         self.dock_wgt_order.setWindowTitle(QCoreApplication.translate("MainWindow", u"Favorites", None))
+        self.dock_wgt_order_list.setWindowTitle(QCoreApplication.translate("MainWindow", u"Positions", None))
     # retranslateUi
 
