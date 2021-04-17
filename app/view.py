@@ -46,6 +46,7 @@ class MainWindow(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
 
         self.setupUi(self)
         self.setWindowState(QtCore.Qt.WindowMaximized)
+        self.setCorner(QtCore.Qt.BottomRightCorner, QtCore.Qt.RightDockWidgetArea)
 
         # Constants
         self.tickers_dialog = None
@@ -123,6 +124,9 @@ class MainWindow(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
         self.wgt_order.signals.sig_order_added.connect(
             self.orders_manager.save_orders
         )
+        self.wgt_order.signals.sig_order_added.connect(
+            self.wgt_graph.graph.draw_position
+        )
         self.wgt_order_list.signals.sig_order_close.connect(
             self.orders_manager.close_order
         )
@@ -158,7 +162,7 @@ class MainWindow(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
         tick = self.lie_ticker.text()
         ticker = yf.Ticker(tick)
         self.signals.sig_ticker_infos_fetched.emit(ticker.info)
-        data = ticker.history(period="1y", interval="1d", start="2018-01-01")
+        data = ticker.history(period="1y", interval="1d", start=cst.START_DATE)
         self.signals.sig_ticker_data_fetched.emit(data)
         self.signals.sig_data.emit(tick, data)
 
@@ -169,7 +173,12 @@ class MainWindow(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
         :param data: The data of the ticker
         :type data: panda dataframe
         """
+        tick = self.lie_ticker.text()
+        orders = utils.check_ticker_orders(tick)
         self.wgt_graph.graph.plot_quotation(data)
+        if orders:
+            self.wgt_graph.graph.draw_position(orders)
+
         for indicator in self.wgt_indicators.indicators:
             if not indicator.enabled:
                 continue

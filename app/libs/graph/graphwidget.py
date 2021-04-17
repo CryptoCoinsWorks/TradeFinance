@@ -1,11 +1,11 @@
 import numpy as np
+from utils import utils
 import pyqtgraph as pg
 from utils import constants as cst
 from PySide2 import QtCore, QtGui, QtWidgets
 
 from libs.graph.candlestick import CandlestickItem
 from libs.events_handler import EventHandler
-from utils import utils
 
 # TODO import from palette or Qss
 color = (53, 53, 53)
@@ -18,9 +18,14 @@ class GraphView(pg.GraphicsLayoutWidget):
         super(GraphView, self).__init__(parent=parent)
 
         # Constants
+        self.prices_axis = list()
+        self.axis_right = None
         self.values = None
         self.v_line = None
         self.h_line = None
+        self.buy_line = None
+        self.limit_line = None
+        self.stop_line = None
 
         self.signals = EventHandler()
 
@@ -58,11 +63,12 @@ class GraphView(pg.GraphicsLayoutWidget):
             ls_data.append((dates[index], _open, _close, _high, _low))
         item = CandlestickItem(ls_data)
         self.g_quotation.addItem(item)
-        # self.g_quotation.enableAutoRange()
-        self.set_time_x_axis(widget=self.g_quotation)
-        self.set_y_axis(widget=self.g_quotation,
-                        data_close=data[cst.CLOSE])
 
+        self.prices_axis.append(data[cst.CLOSE].iloc[-1])
+        self.set_time_x_axis(widget=self.g_quotation)
+        self.set_y_axis(widget=self.g_quotation)
+
+        # Set Limit Graph from the price
         price_variation = (np.amax(data[cst.CLOSE])-np.amin(data[cst.CLOSE])) / 2
 
         self.range_view = (dates[-240], dates[-1])
@@ -100,7 +106,7 @@ class GraphView(pg.GraphicsLayoutWidget):
     def set_time_x_axis(self, widget):
         widget.setAxisItems({"bottom": pg.DateAxisItem(orientation="bottom")})
 
-    def set_y_axis(self, widget, data_close):
+    def set_y_axis(self, widget):
         """Set Y Axis in Left and add Price.
         :param widget: GraphWidget
         :type widget: PQQt.GraphWidget
@@ -108,8 +114,16 @@ class GraphView(pg.GraphicsLayoutWidget):
         :type data_close: DataFrame
         """
         widget.showAxis('right')
-        axis = widget.getAxis('right')
-        axis.setTicks([[(data_close[-1], str(round(data_close[-1], 2)))]])
+        self.axis_right = widget.getAxis('right')
+        self._add_ticker_right_axis()
+
+    def _add_ticker_right_axis(self):
+        """This method append tickers in Right Axis.
+        """
+        prices = list()
+        for price in self.prices_axis:
+            prices.append((price, str(round(price, 1))))
+        self.axis_right.setTicks([prices])
 
 
     @QtCore.Slot(object)
@@ -147,6 +161,41 @@ class GraphView(pg.GraphicsLayoutWidget):
     def mouseMoveEvent(self, event):
         self.signals.sig_graph_mouse_moved.emit(event)
         super(GraphView, self).mouseMoveEvent(event)
+
+    QtCore.Signal(dict)
+    def draw_position(self, postions):
+        if isinstance(postions, dict):
+            postions = [postions]
+
+        for position in postions:
+            self.buy_line = pg.InfiniteLine(
+                pos=position['price'],
+                angle=0,
+                movable=False,
+                pen=pg.mkPen(color=(55, 110, 55),
+                             style=QtCore.Qt.DashLine,
+                             width=0.8),
+                labelOpts=position['price'],
+                )
+            if position['order_execution'] == "LIMIT":
+                self.limit_line =  pg.InfiniteLine(
+                    pos=position['limit'],
+                    angle=0,
+                    movable=False,
+                    pen=pg.mkPen(color=(110, 55, 55),
+                                 style=QtCore.Qt.DashLine,
+                                 width=0.8),
+                    labelOpts=position['limit'],
+                )
+                self.g_quotation.addItem(self.limit_line)
+                self.prices_axis.append(position['limit'])
+
+            # if position['order_execution'] == "STOP":
+
+            self.g_quotation.addItem(self.buy_line)
+            self.prices_axis.append(position['price'])
+
+        self._add_ticker_right_axis()
 
 
 class GraphWidget(QtWidgets.QWidget):
@@ -187,3 +236,5 @@ class GraphWidget(QtWidgets.QWidget):
 
     def draw_resistance(self, *args, **kwargs):
         print("hello")
+
+

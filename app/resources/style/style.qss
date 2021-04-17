@@ -181,6 +181,10 @@ QTableView {
   alternate-background-color: palette(midlight);
 }
 
+QHeaderView::section{
+    color:black;
+}
+
 QTreeWidget::item {
   padding: 5px;
   height: 30px;
@@ -238,6 +242,13 @@ QPushButton#buy_btn{
 
 QPushButton#sell_btn{
     background: red;
+    height:20px;
+    border-radius:3px;
+    color:white;
+}
+
+QPushButton#close_position{
+    background: transparent;
     height:20px;
     border-radius:3px;
     color:white;

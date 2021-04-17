@@ -4,6 +4,8 @@ import uuid
 import random
 import datetime
 import urllib.request
+import yfinance as yf
+from utils import constants as cst
 from statistics import mean
 from modules.yahoo_fin import stock_info as sf
 
@@ -372,34 +374,56 @@ def set_id():
     return id
 
 
+
 def all_ids(uiid):
-    _app_home = os.environ.get("APP_HOME")
-    _orders_path = os.path.join(
-        _app_home, "orders", "orders.json"
-    )
-    with open(_orders_path, "r") as f:
-        orders = json.load(f)
+    orders = load_orders()
     for order in orders:
         if uiid == order['id']:
             return True
         else:
             return False
 
-def load_orders(path):
+def load_orders():
     """Load orders from the file
 
     :return: The loaded favorite
     :rtype: list
     """
+    _app_home = os.environ.get("APP_HOME")
+    path = os.path.join(
+        _app_home, "orders", "orders.json"
+    )
     order = []
     if not _check_orders(path):
+        create_order(path)
         return order
     with open(path, "r") as f:
         order = json.load(f)
     return order
 
+def create_order(orders_path) -> bool:
+    """Create the order file if it doesn't exists
+
+    :return: True if exists, False if the creation failed
+    :rtype: bool
+    """
+    if not os.path.exists(os.path.dirname(orders_path)):
+        try:
+            os.mkdir(os.path.dirname(orders_path))
+        except Exception as error:  # TODO cath correct error
+            print(error)
+    # create file in all cases
+    try:
+        with open(orders_path, "w") as f:
+            json.dump(list(), f, indent=4)
+            f.close()
+    except Exception as error:
+        print(error)
+        return False
+    return True
+
 def _check_orders(path):
-    """Check if the favorite file exists
+    """Check if the file exists
 
     :return: True or False
     :rtype: bool
@@ -407,3 +431,20 @@ def _check_orders(path):
     if os.path.exists(path):
         return True
     return False
+
+
+def get_last_price(ticker):
+    """Return the last current price from a ticker
+    """
+    ticker = yf.Ticker(ticker)
+    data = ticker.history(period="1y", interval="1d", start=cst.START_DATE)
+    return data[cst.CLOSE].iloc[-1]
+
+
+def check_ticker_orders(ticker):
+    positions = list()
+    orders = load_orders()
+    for position in orders:
+        if position['ticker'] == ticker:
+            positions.append(position)
+    return positions

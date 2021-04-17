@@ -16,7 +16,7 @@ LVLS = {
 }
 
 class Sentimental_Widget(QtWidgets.QWidget):
-    def __init__(self, parent=None, ticker=None):
+    def __init__(self, parent=None):
         super(Sentimental_Widget, self).__init__(parent=parent)
 
         self.layout = QtWidgets.QVBoxLayout(self)
@@ -24,9 +24,6 @@ class Sentimental_Widget(QtWidgets.QWidget):
         self.signals = EventHandler()
         self.thread_pool = ThreadPool()
 
-        # self.thread_list = FillListThread(articles=cst.TICKERS_SENTIMENTALS)
-        # self.thread_list.start()
-        # self.thread_list.signal.sig_new_item.connect(self.get_widget_in_stack)
         # for ticker in cst.TICKERS_SENTIMENTALS:
         #     self.get_widget_in_stack(ticker)
 

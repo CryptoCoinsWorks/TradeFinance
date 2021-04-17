@@ -86,7 +86,7 @@ class MACD(Indicator):
             w_low=field_emaslow.value,
             w_fast=field_emafast.value,
         )
-        ema = exp_moving_average(macd, w=field_ema.value)
+        ema = values[field_input.current].ewm(com=field_ema.value).mean()
         macd_bar = macd - ema
 
         bars = BarGraphItem(
