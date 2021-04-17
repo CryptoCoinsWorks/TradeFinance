@@ -58,6 +58,7 @@ class Ui_Form(object):
         self.box_quantity_market = QSpinBox(self.groupBox_market)
         self.box_quantity_market.setObjectName(u"box_quantity_market")
         self.box_quantity_market.setAlignment(Qt.AlignRight|Qt.AlignTrailing|Qt.AlignVCenter)
+        self.box_quantity_market.setMaximum(999999)
 
         self.horizontalLayout_3.addWidget(self.box_quantity_market)
 
@@ -107,6 +108,7 @@ class Ui_Form(object):
         self.box_quantity_limit = QSpinBox(self.groupBox_2)
         self.box_quantity_limit.setObjectName(u"box_quantity_limit")
         self.box_quantity_limit.setAlignment(Qt.AlignRight|Qt.AlignTrailing|Qt.AlignVCenter)
+        self.box_quantity_limit.setMaximum(999999)
 
         self.horizontalLayout_8.addWidget(self.box_quantity_limit)
 
@@ -140,6 +142,7 @@ class Ui_Form(object):
         self.box_limit_price = QSpinBox(self.groupBox_3)
         self.box_limit_price.setObjectName(u"box_limit_price")
         self.box_limit_price.setAlignment(Qt.AlignRight|Qt.AlignTrailing|Qt.AlignVCenter)
+        self.box_limit_price.setMaximum(999999)
 
         self.horizontalLayout_9.addWidget(self.box_limit_price)
 
@@ -206,6 +209,7 @@ class Ui_Form(object):
         self.box_quantity_stop = QSpinBox(self.groupBox_5)
         self.box_quantity_stop.setObjectName(u"box_quantity_stop")
         self.box_quantity_stop.setAlignment(Qt.AlignRight|Qt.AlignTrailing|Qt.AlignVCenter)
+        self.box_quantity_stop.setMaximum(999999)
 
         self.horizontalLayout_11.addWidget(self.box_quantity_stop)
 
@@ -239,6 +243,7 @@ class Ui_Form(object):
         self.box_stop_price = QSpinBox(self.groupBox_4)
         self.box_stop_price.setObjectName(u"box_stop_price")
         self.box_stop_price.setAlignment(Qt.AlignRight|Qt.AlignTrailing|Qt.AlignVCenter)
+        self.box_stop_price.setMaximum(999999)
 
         self.horizontalLayout_10.addWidget(self.box_stop_price)
 

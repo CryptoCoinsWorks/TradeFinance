@@ -14,7 +14,6 @@ class OrderView(QtWidgets.QWidget, Ui_Form):
         super(OrderView, self).__init__(parent=parent)
 
         self.signals = EventHandler()
-        # self.order_manager = OrderSettings()
 
         self.setupUi(self)
         self.order_wgt.setStyleSheet('background-color: rgb(43, 43, 43);')
@@ -25,9 +24,8 @@ class OrderView(QtWidgets.QWidget, Ui_Form):
         self.data = None
         self.ticker = None
 
-        # self.buy_btn.clicked.connect(self.set_buy)
+        self.buy_btn.clicked.connect(self.set_buy)
         self.sell_btn.clicked.connect(self.set_sell)
-        self.buy_btn.clicked.connect(self.delete_order)
         self.btn_order.clicked.connect(self.place_order)
 
         self.set_ui()
@@ -60,7 +58,7 @@ class OrderView(QtWidgets.QWidget, Ui_Form):
         """Get prices by the signal emit from the ticker.
         """
         self.data = data
-        self.price = data.iloc[-1]['Close']
+        self.price = utils.get_last_price(ticker)
         self.ticker = ticker
 
     def place_order(self):
@@ -79,16 +77,14 @@ class OrderView(QtWidgets.QWidget, Ui_Form):
         """Buy or Sell at market price.
         """
         total = 0
-        amount = 0
+        amount = self.box_quantity_market.value()
 
         if self.buy:
             order_type = "BUY"
-            amount = self.box_quantity_market.value()
             total = amount * self.price
 
         elif self.sell:
             order_type = "SELL"
-            amount = self.box_quantity_market.value()
             total = amount * self.price
 
         else:
@@ -98,28 +94,60 @@ class OrderView(QtWidgets.QWidget, Ui_Form):
         self._build_order(amount=amount, order_type=order_type, order_exec=order_exec)
 
     def _order_limit(self, order_exec):
-        pass
+        total = 0
+        amount = self.box_quantity_limit.value()
+        limit = self.box_limit_price.value()
+
+        if self.buy:
+            order_type = "BUY"
+            total = amount * limit
+
+        elif self.sell:
+            order_type = "SELL"
+            total = amount * limit
+
+        self.set_total(total=total)
+        self._build_order(amount=amount,
+                          order_type=order_type,
+                          order_exec=order_exec,
+                          limit=limit
+                          )
 
     def _order_stop(self, order_exec):
-        pass
+        total = 0
+        amount = self.box_quantity_stop.value()
+        stop = self.box_stop_price.value()
+        limit = self.box_limit_price_stop.value()
+
+        if self.buy:
+            order_type = "BUY"
+            total = amount * limit
+
+        elif self.sell:
+            order_type = "SELL"
+            total = amount * limit
+
+        self.set_total(total=total)
+        self._build_order(amount=amount,
+                          order_type=order_type,
+                          order_exec=order_exec,
+                          limit=limit,
+                          stop=stop,
+                          )
 
     def set_total(self, total=0):
         self.lb_price.setText("%s €" % total)
 
-    def _build_order(self, amount, order_type, order_exec, limit=None, stop=None, timing=None):
+    def _build_order(self, amount, order_type, order_exec, limit="", stop="", timing=""):
         order = {
             "ticker": self.ticker,
             "order_type": order_type,
             "order_execution": order_exec,
             "amount": amount,
-            "price": self.price,
+            "price": round(self.price, 2),
             "limit": limit,
             "stop": stop,
             "date": datetime.datetime.now().timestamp(),
             "timing": timing,
         }
         self.signals.sig_order_added.emit(order)
-
-    def delete_order(self):
-        i = 24720
-        self.signals.sig_order_close.emit(i)
