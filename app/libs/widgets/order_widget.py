@@ -58,7 +58,7 @@ class OrderView(QtWidgets.QWidget, Ui_Form):
         """Get prices by the signal emit from the ticker.
         """
         self.data = data
-        self.price = data.iloc[-1]['Close']
+        self.price = utils.get_last_price(ticker)
         self.ticker = ticker
 
     def place_order(self):
@@ -77,16 +77,14 @@ class OrderView(QtWidgets.QWidget, Ui_Form):
         """Buy or Sell at market price.
         """
         total = 0
-        amount = 0
+        amount = self.box_quantity_market.value()
 
         if self.buy:
             order_type = "BUY"
-            amount = self.box_quantity_market.value()
             total = amount * self.price
 
         elif self.sell:
             order_type = "SELL"
-            amount = self.box_quantity_market.value()
             total = amount * self.price
 
         else:
@@ -96,10 +94,46 @@ class OrderView(QtWidgets.QWidget, Ui_Form):
         self._build_order(amount=amount, order_type=order_type, order_exec=order_exec)
 
     def _order_limit(self, order_exec):
-        pass
+        total = 0
+        amount = self.box_quantity_limit.value()
+        limit = self.box_limit_price.value()
+
+        if self.buy:
+            order_type = "BUY"
+            total = amount * limit
+
+        elif self.sell:
+            order_type = "SELL"
+            total = amount * limit
+
+        self.set_total(total=total)
+        self._build_order(amount=amount,
+                          order_type=order_type,
+                          order_exec=order_exec,
+                          limit=limit
+                          )
 
     def _order_stop(self, order_exec):
-        pass
+        total = 0
+        amount = self.box_quantity_stop.value()
+        stop = self.box_stop_price.value()
+        limit = self.box_limit_price_stop.value()
+
+        if self.buy:
+            order_type = "BUY"
+            total = amount * limit
+
+        elif self.sell:
+            order_type = "SELL"
+            total = amount * limit
+
+        self.set_total(total=total)
+        self._build_order(amount=amount,
+                          order_type=order_type,
+                          order_exec=order_exec,
+                          limit=limit,
+                          stop=stop,
+                          )
 
     def set_total(self, total=0):
         self.lb_price.setText("%s €" % total)
@@ -110,11 +144,10 @@ class OrderView(QtWidgets.QWidget, Ui_Form):
             "order_type": order_type,
             "order_execution": order_exec,
             "amount": amount,
-            "price": self.price,
+            "price": round(self.price, 2),
             "limit": limit,
             "stop": stop,
             "date": datetime.datetime.now().timestamp(),
             "timing": timing,
         }
         self.signals.sig_order_added.emit(order)
-
