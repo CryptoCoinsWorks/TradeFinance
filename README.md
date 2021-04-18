@@ -47,8 +47,8 @@ It is largely inspired by `TradingView` which is a wonderfull tool for finance a
 - [ ] Embeded Python Console ?
 - [ ] Draw over the graph
 - [ ] Use Machine learning to determine patterns
-- [ ] Draw Fibonnaci on Chart => 50% done
+- [x] Draw Fibonnaci on Chart => 50% done
 - [ ] Make Virtual Portefolio
-- [ ] Avaible Trading
-- [ ] SplashScreen Loading
+- [x] Avaible Trading
+- [x] SplashScreen Loading
 - [ ] Find Compagnies with differents stratgies (Buffet, Peter Lynch, Carl Icahn)

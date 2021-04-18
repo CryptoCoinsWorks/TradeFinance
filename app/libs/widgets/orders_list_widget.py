@@ -35,6 +35,8 @@ class OrderList(QtWidgets.QWidget, Ui_Form):
     def _load_positions(self, positions):
         """Load Positions from the file and create it in TreeWidget.
         """
+        if isinstance(positions, dict):
+            positions = [positions]
         for row, position in enumerate(positions):
             list_value = [position['ticker'],
                           str(position['id']),
