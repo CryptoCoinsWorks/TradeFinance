@@ -152,7 +152,9 @@ class MainWindow(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
         tick = self.lie_ticker.text()
         ticker = yf.Ticker(tick)
         self.signals.sig_ticker_infos_fetched.emit(ticker.info)
-        data = ticker.history(period="1y", interval="1d", start=cst.START_DATE)
+        data = ticker.history(period=cst.PERIODE,
+                              interval=cst.INTERVAL,
+                              start=cst.START_DATE)
         self.signals.sig_ticker_data_fetched.emit(data)
         self.signals.sig_data.emit(tick, data)
 
@@ -165,7 +167,7 @@ class MainWindow(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
         """
         tick = self.lie_ticker.text()
         orders = utils.check_ticker_orders(tick)
-        self.wgt_graph.graph.plot_quotation(data)
+        self.wgt_graph.graph.plot_quotation(data=data, ticker=tick)
         if orders:
             self.wgt_graph.graph.draw_position(orders)
 

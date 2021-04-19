@@ -82,7 +82,7 @@ class ExpoMovingAverage(Indicator):
             if not isinstance(field, InputField):
                 # Escape ChoiceFields
                 continue
-            mva = values[field_input.current].ewm(com=field.value).mean()
+            mva = values[field_input.current].ewm(window=field.value).mean()
             plot = quotation_plot.plot(
                 x=[x.timestamp() for x in values.index],
                 y=mva,

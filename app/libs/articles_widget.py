@@ -17,9 +17,9 @@ class ArticlesWidget(QtWidgets.QListWidget):
         self.signal = EventHandler()
         self.thread_pool = ThreadPool()
 
-        # self.thread_pool.signals.sig_thread_result.connect(
-        #     self._fill_articles_list
-        # )
+        self.thread_pool.signals.sig_thread_result.connect(
+            self._fill_articles_list
+        )
 
     @QtCore.Slot(str)
     def _on_get_articles(self, ticker):
