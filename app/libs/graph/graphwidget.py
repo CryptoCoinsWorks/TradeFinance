@@ -21,6 +21,7 @@ class GraphView(pg.GraphicsLayoutWidget):
         self.prices_axis = list()
         self.axis_right = None
         self.values = None
+        self.ticker = None
         self.v_line = None
         self.h_line = None
         self.buy_line = None
@@ -38,7 +39,7 @@ class GraphView(pg.GraphicsLayoutWidget):
             self._on_mouse_clicked
         )
 
-    def plot_quotation(self, data, clear=True):
+    def plot_quotation(self, data, ticker, clear=True):
         """Plot the quotation
 
         :param data: The data to plot
@@ -46,6 +47,7 @@ class GraphView(pg.GraphicsLayoutWidget):
         :param clear: Clear the graph before plot, defaults to True
         :type clear: bool, optional
         """
+        self.ticker = ticker
         self.values = data
         if clear:
             self.g_quotation.clear()

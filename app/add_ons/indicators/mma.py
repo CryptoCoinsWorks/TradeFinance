@@ -130,7 +130,7 @@ class MMA(Indicator):
                 # Escape ChoiceFields
                 continue
             # TODO need pass this to EMA instead of MMA
-            mva = values[field_input.current].rolling(com=field.value).mean()
+            mva = values[field_input.current].rolling(window=field.value).mean()
             plot = quotation_plot.plot(
                 x=[x.timestamp() for x in values.index],
                 y=mva,
