@@ -226,12 +226,12 @@
            </widget>
           </item>
           <item>
-           <widget class="QSpinBox" name="box_limit_price">
+           <widget class="QDoubleSpinBox" name="box_limit_price">
             <property name="alignment">
              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
             </property>
             <property name="maximum">
-             <number>999999</number>
+             <double>999999999.990000009536743</double>
             </property>
            </widget>
           </item>
@@ -416,12 +416,12 @@
            </widget>
           </item>
           <item>
-           <widget class="QSpinBox" name="box_stop_price">
+           <widget class="QDoubleSpinBox" name="box_stop_price">
             <property name="alignment">
              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
             </property>
             <property name="maximum">
-             <number>999999</number>
+             <double>999999999.990000009536743</double>
             </property>
            </widget>
           </item>
@@ -474,9 +474,12 @@
            </widget>
           </item>
           <item>
-           <widget class="QSpinBox" name="box_limit_price_stop">
+           <widget class="QDoubleSpinBox" name="box_limit_price_stop">
             <property name="alignment">
              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+            <property name="maximum">
+             <double>999999999.990000009536743</double>
             </property>
            </widget>
           </item>

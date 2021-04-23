@@ -16,6 +16,7 @@ from libs.roi_manager import ROIManager
 from ui import main_window
 
 from utils import utils
+from utils import utils_orders
 from utils import constants as cst
 
 SCRIPT_PATH = os.path.dirname(__file__)
@@ -166,7 +167,7 @@ class MainWindow(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
         :type data: panda dataframe
         """
         tick = self.lie_ticker.text()
-        orders = utils.check_ticker_orders(tick)
+        orders = utils_orders.check_ticker_orders(tick)
         self.wgt_graph.graph.plot_quotation(data=data, ticker=tick)
         if orders:
             self.wgt_graph.graph.draw_position(orders)

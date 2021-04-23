@@ -104,8 +104,8 @@
         "args": {
             "tool": "fibonnaci"
             },
-        "tooltip": "Brush",
-        "text": "Brush",
+        "tooltip": "Fibonnaci",
+        "text": "Fibonnaci",
         "checkable": false
     },
     {

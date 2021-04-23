@@ -1,6 +1,7 @@
 import datetime
 import numpy as np
 from utils import utils
+from utils import utils_orders
 from pprint import pprint
 from ui.order import Ui_Form
 from PySide2 import QtCore, QtWidgets, QtGui
@@ -23,7 +24,11 @@ class OrderView(QtWidgets.QWidget, Ui_Form):
         self.sell = False
         self.data = None
         self.ticker = None
+        self.price = None
 
+        self.box_limit_price.valueChanged.connect(self.limit_price_changed)
+        self.box_limit_price_stop.valueChanged.connect(self.stop_limit_changed)
+        self.box_stop_price.valueChanged.connect(self.stop_price_changed)
         self.buy_btn.clicked.connect(self.set_buy)
         self.sell_btn.clicked.connect(self.set_sell)
         self.btn_order.clicked.connect(self.place_order)
@@ -53,25 +58,46 @@ class OrderView(QtWidgets.QWidget, Ui_Form):
         self.buy = False
         self.sell = True
 
+    def stop_limit_changed(self):
+        self._change_box(widget=self.box_limit_price)
+
+    def limit_price_changed(self):
+        self._change_box(widget=self.box_stop_price)
+
+    def stop_price_changed(self):
+        self._change_box(widget=self.box_limit_price_stop)
+
+    def _change_box(self, widget):
+        first = False
+        if self.price:
+            if not first:
+                widget.setValue(self.price-1)
+                first = True
+
+
     @QtCore.Slot(str, dict)
     def get_data(self, ticker, data):
         """Get prices by the signal emit from the ticker.
         """
         self.data = data
-        self.price = utils.get_last_price(ticker)
+        self.price = utils_orders.get_last_price(ticker)
         self.ticker = ticker
 
     def place_order(self):
         """Place Order.
         Check the current Tab to know what kind of order.
         """
-        current_bar = self.order_wgt.currentIndex()
-        if current_bar == 0:
-            self._order_market(order_exec="MARKET")
-        elif current_bar == 1:
-            self._order_limit(order_exec="LIMIT")
-        elif current_bar == 2:
-            self._order_stop(order_exec="STOP")
+        try:
+            current_bar = self.order_wgt.currentIndex()
+            if current_bar == 0:
+                self._order_market(order_exec="MARKET")
+            elif current_bar == 1:
+                self._order_limit(order_exec="LIMIT")
+            elif current_bar == 2:
+                self._order_stop(order_exec="STOP")
+        except:
+            msg = "No Compagny choosen. Please select one before place an order."
+            utils.message_popup(self, message=msg)
 
     def _order_market(self, order_exec):
         """Buy or Sell at market price.
@@ -86,6 +112,7 @@ class OrderView(QtWidgets.QWidget, Ui_Form):
         elif self.sell:
             order_type = "SELL"
             total = amount * self.price
+
 
         else:
             return
@@ -138,7 +165,7 @@ class OrderView(QtWidgets.QWidget, Ui_Form):
     def set_total(self, total=0):
         self.lb_price.setText("%s €" % total)
 
-    def _build_order(self, amount, order_type, order_exec, limit="", stop="", timing=""):
+    def _build_order(self, amount, order_type, order_exec, limit="", stop="", timing="", tp="", sl=""):
         order = {
             "ticker": self.ticker,
             "order_type": order_type,
@@ -149,5 +176,7 @@ class OrderView(QtWidgets.QWidget, Ui_Form):
             "stop": stop,
             "date": datetime.datetime.now().timestamp(),
             "timing": timing,
+            "take_profit": tp,
+            "stop_loss": sl,
         }
         self.signals.sig_order_added.emit(order)

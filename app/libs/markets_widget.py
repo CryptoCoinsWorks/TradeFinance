@@ -8,7 +8,6 @@ from libs.events_handler import EventHandler
 from libs.widgets.stackedwidget import StackedWidget
 
 
-
 class MarketsWidget(StackedWidget):
     """
     Markets are the informations in the Welcome Page showing price and
@@ -24,14 +23,15 @@ class MarketsWidget(StackedWidget):
         page = QtWidgets.QWidget()
         layout = QtWidgets.QHBoxLayout(page)
 
-        # for count, (name, tick) in enumerate(cst.TICKERS_MARKETS.items()):
-        #     if count % 5 == 0:
-        #         page = QtWidgets.QWidget()
-        #         layout = QtWidgets.QHBoxLayout(page)
-        #     item = MarketsWidgetItem(self, ticker=tick, compagny=name)
-        #     layout.addWidget(item)
-        #
-        #     self.addWidget(page)
+        if not cst.DEV:
+            for count, (name, tick) in enumerate(cst.TICKERS_MARKETS.items()):
+                if count % 5 == 0:
+                    page = QtWidgets.QWidget()
+                    layout = QtWidgets.QHBoxLayout(page)
+                item = MarketsWidgetItem(self, ticker=tick, compagny=name)
+                layout.addWidget(item)
+
+                self.addWidget(page)
 
 
 class MarketsWidgetItem(QtWidgets.QWidget, markets_widget.Ui_markets):

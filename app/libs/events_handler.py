@@ -34,6 +34,7 @@ class EventHandler(QtCore.QObject):
     sig_order_added = QtCore.Signal(dict)
     sig_order_loaded = QtCore.Signal(list)
     sig_order_close = QtCore.Signal(int)
+    sig_order_modify = QtCore.Signal(dict)
 
     sig_articles = QtCore.Signal(dict)
     sig_data = QtCore.Signal(str, dict)
