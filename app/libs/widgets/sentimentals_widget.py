@@ -24,8 +24,9 @@ class Sentimental_Widget(QtWidgets.QWidget):
         self.signals = EventHandler()
         self.thread_pool = ThreadPool()
 
-        # for ticker in cst.TICKERS_SENTIMENTALS:
-        #     self.get_widget_in_stack(ticker)
+        if not cst.DEV:
+            for ticker in cst.TICKERS_SENTIMENTALS:
+                self.get_widget_in_stack(ticker)
 
 
     @QtCore.Slot(str)

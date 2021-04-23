@@ -139,10 +139,10 @@ class Ui_Form(object):
 
         self.horizontalLayout_9.addWidget(self.label_4)
 
-        self.box_limit_price = QSpinBox(self.groupBox_3)
+        self.box_limit_price = QDoubleSpinBox(self.groupBox_3)
         self.box_limit_price.setObjectName(u"box_limit_price")
         self.box_limit_price.setAlignment(Qt.AlignRight|Qt.AlignTrailing|Qt.AlignVCenter)
-        self.box_limit_price.setMaximum(999999)
+        self.box_limit_price.setMaximum(999999999.990000009536743)
 
         self.horizontalLayout_9.addWidget(self.box_limit_price)
 
@@ -240,10 +240,10 @@ class Ui_Form(object):
 
         self.horizontalLayout_10.addWidget(self.label_8)
 
-        self.box_stop_price = QSpinBox(self.groupBox_4)
+        self.box_stop_price = QDoubleSpinBox(self.groupBox_4)
         self.box_stop_price.setObjectName(u"box_stop_price")
         self.box_stop_price.setAlignment(Qt.AlignRight|Qt.AlignTrailing|Qt.AlignVCenter)
-        self.box_stop_price.setMaximum(999999)
+        self.box_stop_price.setMaximum(999999999.990000009536743)
 
         self.horizontalLayout_10.addWidget(self.box_stop_price)
 
@@ -274,9 +274,10 @@ class Ui_Form(object):
 
         self.horizontalLayout_12.addWidget(self.label_6)
 
-        self.box_limit_price_stop = QSpinBox(self.groupBox_6)
+        self.box_limit_price_stop = QDoubleSpinBox(self.groupBox_6)
         self.box_limit_price_stop.setObjectName(u"box_limit_price_stop")
         self.box_limit_price_stop.setAlignment(Qt.AlignRight|Qt.AlignTrailing|Qt.AlignVCenter)
+        self.box_limit_price_stop.setMaximum(999999999.990000009536743)
 
         self.horizontalLayout_12.addWidget(self.box_limit_price_stop)
 
