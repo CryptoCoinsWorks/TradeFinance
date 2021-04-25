@@ -119,12 +119,11 @@ class ROIManager(QtCore.QObject):
         self.current_graph.addItem(roi)
         roi.sigRemoveRequested.connect(self._on_roi_remove_requested)
 
-
     def fibonnaci(self, initial_pos, **kwargs):
-        fibo = fibonnaci.Fibonnaci(self)
-        fibo_item = fibo.run(graph=self.current_graph, position=initial_pos)
-        fibo_item.sigRegionChanged.connect(fibo.move_items)
-        fibo_item.sigRemoveRequested.connect(self._on_roi_remove_requested)
+        self.fibo = fibonnaci.Fibonnaci(self)
+        self.fibo_item = self.fibo.run(graph=self.current_graph, position=initial_pos)
+        self.fibo_item.sigRegionChanged.connect(self.fibo.move_items)
+        self.fibo_item.sigRemoveRequested.connect(self._on_roi_remove_requested)
 
 
     def measure_fct(self, initial_pos, **kwargs):
