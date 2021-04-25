@@ -78,12 +78,73 @@ class Ui_Form(object):
 
         self.verticalLayout_2.addWidget(self.groupBox_market)
 
-        self.line_2 = QFrame(self.tab)
-        self.line_2.setObjectName(u"line_2")
-        self.line_2.setFrameShape(QFrame.HLine)
-        self.line_2.setFrameShadow(QFrame.Sunken)
+        self.groupBox_8 = QGroupBox(self.tab)
+        self.groupBox_8.setObjectName(u"groupBox_8")
+        self.horizontalLayout_15 = QHBoxLayout(self.groupBox_8)
+        self.horizontalLayout_15.setObjectName(u"horizontalLayout_15")
+        self.label_9 = QLabel(self.groupBox_8)
+        self.label_9.setObjectName(u"label_9")
+        self.label_9.setMinimumSize(QSize(75, 0))
+        self.label_9.setMaximumSize(QSize(75, 100))
 
-        self.verticalLayout_2.addWidget(self.line_2)
+        self.horizontalLayout_15.addWidget(self.label_9)
+
+        self.box_limit_price_2 = QDoubleSpinBox(self.groupBox_8)
+        self.box_limit_price_2.setObjectName(u"box_limit_price_2")
+        self.box_limit_price_2.setAlignment(Qt.AlignRight|Qt.AlignTrailing|Qt.AlignVCenter)
+        self.box_limit_price_2.setMaximum(999999999.990000009536743)
+
+        self.horizontalLayout_15.addWidget(self.box_limit_price_2)
+
+        self.line_8 = QFrame(self.groupBox_8)
+        self.line_8.setObjectName(u"line_8")
+        self.line_8.setFrameShape(QFrame.VLine)
+        self.line_8.setFrameShadow(QFrame.Sunken)
+
+        self.horizontalLayout_15.addWidget(self.line_8)
+
+        self.currency_7 = QLabel(self.groupBox_8)
+        self.currency_7.setObjectName(u"currency_7")
+        self.currency_7.setMaximumSize(QSize(50, 16777215))
+
+        self.horizontalLayout_15.addWidget(self.currency_7)
+
+
+        self.verticalLayout_2.addWidget(self.groupBox_8)
+
+        self.groupBox_9 = QGroupBox(self.tab)
+        self.groupBox_9.setObjectName(u"groupBox_9")
+        self.horizontalLayout_16 = QHBoxLayout(self.groupBox_9)
+        self.horizontalLayout_16.setObjectName(u"horizontalLayout_16")
+        self.label_10 = QLabel(self.groupBox_9)
+        self.label_10.setObjectName(u"label_10")
+        self.label_10.setMinimumSize(QSize(75, 0))
+        self.label_10.setMaximumSize(QSize(75, 100))
+
+        self.horizontalLayout_16.addWidget(self.label_10)
+
+        self.box_limit_price_3 = QDoubleSpinBox(self.groupBox_9)
+        self.box_limit_price_3.setObjectName(u"box_limit_price_3")
+        self.box_limit_price_3.setAlignment(Qt.AlignRight|Qt.AlignTrailing|Qt.AlignVCenter)
+        self.box_limit_price_3.setMaximum(999999999.990000009536743)
+
+        self.horizontalLayout_16.addWidget(self.box_limit_price_3)
+
+        self.line_9 = QFrame(self.groupBox_9)
+        self.line_9.setObjectName(u"line_9")
+        self.line_9.setFrameShape(QFrame.VLine)
+        self.line_9.setFrameShadow(QFrame.Sunken)
+
+        self.horizontalLayout_16.addWidget(self.line_9)
+
+        self.currency_8 = QLabel(self.groupBox_9)
+        self.currency_8.setObjectName(u"currency_8")
+        self.currency_8.setMaximumSize(QSize(50, 16777215))
+
+        self.horizontalLayout_16.addWidget(self.currency_8)
+
+
+        self.verticalLayout_2.addWidget(self.groupBox_9)
 
         self.verticalSpacer = QSpacerItem(20, 277, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
@@ -186,7 +247,7 @@ class Ui_Form(object):
 
         self.verticalLayout_3.addWidget(self.groupBox_7)
 
-        self.verticalSpacer_2 = QSpacerItem(20, 20, QSizePolicy.Minimum, QSizePolicy.Maximum)
+        self.verticalSpacer_2 = QSpacerItem(20, 20, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
         self.verticalLayout_3.addItem(self.verticalSpacer_2)
 
@@ -297,7 +358,7 @@ class Ui_Form(object):
 
         self.verticalLayout.addWidget(self.groupBox_6)
 
-        self.verticalSpacer_3 = QSpacerItem(20, 20, QSizePolicy.Minimum, QSizePolicy.Maximum)
+        self.verticalSpacer_3 = QSpacerItem(20, 20, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
         self.verticalLayout.addItem(self.verticalSpacer_3)
 
@@ -348,10 +409,16 @@ class Ui_Form(object):
         self.groupBox_market.setTitle("")
         self.label.setText(QCoreApplication.translate("Form", u"Amount", None))
         self.currency.setText(QCoreApplication.translate("Form", u"Stocks", None))
+        self.groupBox_8.setTitle("")
+        self.label_9.setText(QCoreApplication.translate("Form", u"Take Profit", None))
+        self.currency_7.setText(QCoreApplication.translate("Form", u"EUR", None))
+        self.groupBox_9.setTitle("")
+        self.label_10.setText(QCoreApplication.translate("Form", u"Stop Loss", None))
+        self.currency_8.setText(QCoreApplication.translate("Form", u"EUR", None))
         self.order_wgt.setTabText(self.order_wgt.indexOf(self.tab), QCoreApplication.translate("Form", u"MARKET", None))
         self.groupBox_2.setTitle("")
         self.label_2.setText(QCoreApplication.translate("Form", u"Amount", None))
-        self.currency_2.setText(QCoreApplication.translate("Form", u"Shares", None))
+        self.currency_2.setText(QCoreApplication.translate("Form", u"Stocks", None))
         self.groupBox_3.setTitle("")
         self.label_4.setText(QCoreApplication.translate("Form", u"Limit Price", None))
         self.currency_3.setText(QCoreApplication.translate("Form", u"EUR", None))
@@ -360,7 +427,7 @@ class Ui_Form(object):
         self.order_wgt.setTabText(self.order_wgt.indexOf(self.tab_2), QCoreApplication.translate("Form", u"LIMIT", None))
         self.groupBox_5.setTitle("")
         self.label_5.setText(QCoreApplication.translate("Form", u"Amount", None))
-        self.currency_5.setText(QCoreApplication.translate("Form", u"EUR", None))
+        self.currency_5.setText(QCoreApplication.translate("Form", u"Stocks", None))
         self.groupBox_4.setTitle("")
         self.label_8.setText(QCoreApplication.translate("Form", u"Stop Price", None))
         self.currency_4.setText(QCoreApplication.translate("Form", u"EUR", None))

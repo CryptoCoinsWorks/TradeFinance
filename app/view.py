@@ -21,6 +21,7 @@ from utils import constants as cst
 
 SCRIPT_PATH = os.path.dirname(__file__)
 
+
 class MainWindow(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
     def __init__(self, parent=None, data=None):
         super(MainWindow, self).__init__(parent=parent)
@@ -254,3 +255,5 @@ class MainWindow(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
 
     def closeEvent(self, event):
         self.favorites_manager.save_favorites()
+
+

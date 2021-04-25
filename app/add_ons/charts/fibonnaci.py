@@ -1,9 +1,4 @@
-import numpy as np
 import pyqtgraph as pg
-from PySide2 import QtCore, QtWidgets
-
-from utils import constants as cst
-from utils.indicators_utils import Indicator, InputField, ChoiceField
 
 COLORS = {
     78.6: (255, 56, 56),
