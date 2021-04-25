@@ -5,7 +5,10 @@ class LabelTitle(QtWidgets.QLabel):
     def __init__(self, link=None, size=20):
         super(LabelTitle, self).__init__()
 
-        self.font = "Times"
+        # self.font = "Marianne"
+        self.fontDB = QtGui.QFontDatabase()
+        self.fontDB.addApplicationFont(":/font/Marianne/fontes_desktop/Marianne-Bold.otf")
+        self.font = "Marianne"
         self.set_font_size(size)
 
     def set_font_size(self, size):

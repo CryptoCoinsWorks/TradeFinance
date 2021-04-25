@@ -27,6 +27,8 @@ class GraphView(pg.GraphicsLayoutWidget):
         self.buy_line = None
         self.limit_line = None
         self.stop_line = None
+        self.release = False
+        self.pos = False
 
         self.signals = EventHandler()
 
@@ -38,6 +40,8 @@ class GraphView(pg.GraphicsLayoutWidget):
         self.g_quotation.scene().sigMouseClicked.connect(
             self._on_mouse_clicked
         )
+
+
 
     def plot_quotation(self, data, ticker, clear=True):
         """Plot the quotation
@@ -127,7 +131,6 @@ class GraphView(pg.GraphicsLayoutWidget):
             prices.append((price, str(round(price, 1))))
         self.axis_right.setTicks([prices])
 
-
     @QtCore.Slot(object)
     def _on_mouse_moved(self, event):
         """Signal on mouse moved
@@ -199,6 +202,12 @@ class GraphView(pg.GraphicsLayoutWidget):
 
         self._add_ticker_right_axis()
 
+    def mouseDragEvent(self, ev, axis=None):
+        print('lqlqllq')
+        self.updateScaleBox(ev.pos(), ev.pos())
+
+
+
 
 class GraphWidget(QtWidgets.QWidget):
     """Widget wrapper for the graph"""
@@ -213,6 +222,9 @@ class GraphWidget(QtWidgets.QWidget):
 
         self.signals = EventHandler()
 
+        self.begin = QtCore.QPoint()
+        self.end = QtCore.QPoint()
+
         # Relay Signals
         self._graph.signals.sig_graph_clicked.connect(
             self.signals.sig_graph_clicked.emit
@@ -226,6 +238,8 @@ class GraphWidget(QtWidgets.QWidget):
         self._graph.signals.sig_graph_mouse_moved.connect(
             self.signals.sig_graph_mouse_moved.emit
         )
+
+
 
     @property
     def graph(self):

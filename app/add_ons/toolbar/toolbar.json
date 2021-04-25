@@ -117,7 +117,10 @@
             "type": "resources",
             "value": ":/svg/measure.svg"
         },
-        "action": "method_to_call",
+        "action": "roi_manager.set_tool",
+         "args": {
+            "tool": "measure_fct"
+            },
         "tooltip": "Measure",
         "text": "Measure",
         "checkable": false
