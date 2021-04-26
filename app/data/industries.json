@@ -1,0 +1,97 @@
+{
+    "Chemicals": [
+        "AI.PA"
+    ],
+    "Aerospace & Defense": [
+        "AIR.PA",
+        "SAF.PA",
+        "HO.PA"
+    ],
+    "Specialty Industrial Machinery": [
+        "ALO.PA",
+        "LR.PA",
+        "SU.PA"
+    ],
+    "Steel": [
+        "MT.AS"
+    ],
+    "Information Technology Services": [
+        "ATO.PA",
+        "CAP.PA"
+    ],
+    "Insurance\u2014Diversified": [
+        "CS.PA"
+    ],
+    "Banks\u2014Regional": [
+        "BNP.PA",
+        "ACA.PA",
+        "GLE.PA"
+    ],
+    "Engineering & Construction": [
+        "EN.PA",
+        "DG.PA"
+    ],
+    "Grocery Stores": [
+        "CA.PA"
+    ],
+    "Packaged Foods": [
+        "BN.PA"
+    ],
+    "Software\u2014Application": [
+        "DSY.PA"
+    ],
+    "Utilities\u2014Diversified": [
+        "ENGI.PA"
+    ],
+    "Medical Instruments & Supplies": [
+        "EL.PA"
+    ],
+    "Luxury Goods": [
+        "RMS.PA",
+        "KER.PA",
+        "MC.PA"
+    ],
+    "Household & Personal Products": [
+        "OR.PA"
+    ],
+    "Telecom Services": [
+        "ORA.PA"
+    ],
+    "Beverages\u2014Wineries & Distilleries": [
+        "RI.PA"
+    ],
+    "Advertising Agencies": [
+        "PUB.PA"
+    ],
+    "Auto Manufacturers": [
+        "RNO.PA",
+        "STLA.PA"
+    ],
+    "Building Products & Equipment": [
+        "SGO.PA"
+    ],
+    "Drug Manufacturers\u2014General": [
+        "SAN.PA"
+    ],
+    "Semiconductors": [
+        "STM.PA"
+    ],
+    "Consulting Services": [
+        "TEP.PA"
+    ],
+    "Oil & Gas Integrated": [
+        "FP.PA"
+    ],
+    "REIT\u2014Retail": [
+        "URW.AS"
+    ],
+    "Waste Management": [
+        "VIE.PA"
+    ],
+    "Broadcasting": [
+        "VIV.PA"
+    ],
+    "Software\u2014Infrastructure": [
+        "WLN.PA"
+    ]
+}

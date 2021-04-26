@@ -69,6 +69,8 @@ class ROIManager(QtCore.QObject):
 
     @QtCore.Slot(object)
     def _on_mouse_pressed(self, event):
+        if event.button() == QtCore.Qt.RightButton:
+            self.unset_tool()
         if self.measure_widget:
             if self.release:
                 self.release = False
@@ -76,7 +78,6 @@ class ROIManager(QtCore.QObject):
                 self.measure_widget = False
                 self.measu.remove()
                 self.unset_tool()
-                print(self.release)
 
     @QtCore.Slot(object)
     def _on_mouse_released(self, event):
@@ -124,7 +125,7 @@ class ROIManager(QtCore.QObject):
         self.fibo_item = self.fibo.run(graph=self.current_graph, position=initial_pos)
         self.fibo_item.sigRegionChanged.connect(self.fibo.move_items)
         self.fibo_item.sigRemoveRequested.connect(self._on_roi_remove_requested)
-
+        self.unset_tool()
 
     def measure_fct(self, initial_pos, **kwargs):
         self.measure_widget = True

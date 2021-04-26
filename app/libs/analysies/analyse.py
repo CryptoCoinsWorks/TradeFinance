@@ -60,3 +60,6 @@ class AnalyseData(object):
         else:
             analyse = "Chiffre d'affaire en décroissance."
         self.analyse["Chiffre d'affaires"] = analyse
+
+    def b_graham_function(self):
+        pass

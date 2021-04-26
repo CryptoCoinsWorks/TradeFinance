@@ -47,7 +47,7 @@ class AnalyseData(object):
         per = float(self.data["PER"][self.annee_prec][:-1].replace(",", "."))
         analyse = ""
         if per <= 0:
-            analyse = "PER %s NEGATIG" % per
+            analyse = "PER %s NEGATIF" % per
         elif per >= 17:
             analyse = "PER %s eleve , Entreprise SUR-COTE." % per
         elif 10 <= per < 17:
