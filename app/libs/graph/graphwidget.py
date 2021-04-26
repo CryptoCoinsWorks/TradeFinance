@@ -158,6 +158,9 @@ class GraphView(pg.GraphicsLayoutWidget):
     def mousePressEvent(self, event):
         self.signals.sig_graph_mouse_pressed.emit(event)
         super(GraphView, self).mousePressEvent(event)
+        # from pprint import pprint
+        # x = self.g_quotation.allChildItems()
+        # pprint(x)
 
     def mouseReleaseEvent(self, event):
         self.signals.sig_graph_mouse_released.emit(event)
