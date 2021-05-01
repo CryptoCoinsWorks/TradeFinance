@@ -170,6 +170,7 @@ class MainWindow(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
         tick = self.lie_ticker.text()
         orders = utils_orders.check_ticker_orders(tick)
         self.wgt_graph.graph.plot_quotation(data=data, ticker=tick)
+        self.wgt_graph.graph.restore_items(parent=self.roi_manager, ticker=tick)
         if orders:
             self.wgt_graph.graph.draw_position(orders)
 
@@ -255,5 +256,6 @@ class MainWindow(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
 
     def closeEvent(self, event):
         self.favorites_manager.save_favorites()
+        self.wgt_graph.graph.save_items()
 
 

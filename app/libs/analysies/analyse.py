@@ -12,17 +12,19 @@ class AnalyseData(object):
         self.per_analyse()
         self.dette_analyse()
         self.chiffre_affaire_analyse()
+        self.b_graham_function()
 
     def bvps_analyse(self):
         bvps, index = utl.get_last_value(self.data["BVPS"])
+        intraseq_value = self.b_graham_function()
         analyse = ""
-        if float(bvps) < float(self.data["PRICE"][index]):
+        if intraseq_value < float(self.data["PRICE"][index]):
             analyse = "Prix SUR-COTE à sa valeur intrasèque : {} €.".format(
-                bvps
+                intraseq_value
             )
-        elif float(bvps) > float(self.data["PRICE"][index]):
+        elif intraseq_value > float(self.data["PRICE"][index]):
             analyse = "Prix SOUS-COTE à sa valeur intrasèque : {}€".format(
-                bvps
+                intraseq_value
             )
         self.analyse["BVPS"] = analyse
 
@@ -62,4 +64,15 @@ class AnalyseData(object):
         self.analyse["Chiffre d'affaires"] = analyse
 
     def b_graham_function(self):
-        pass
+        """
+        formula : V=(EPS*(7+1g)*4.4)/Y
+           EPS: BPA
+           7 : Ration cours/bénéfice pour une entreprise sans croissance
+           g : taux de croissance raisonnablement attendu pour 7 à 10 prochaines années
+           4,4 : le rendement moyen des obligations de sociétés AAA en 1962
+           Y : le rendement actuel des obligations de sociétés AAA
+        """
+        growth = int(float(self.data['Growth']))
+        bna, index = utl.get_last_value(self.data["BNA"])
+        formula = (bna * (7 + 1 * growth) * 4.4) / utl.get_compagny_yield()
+        return round(formula, 2)

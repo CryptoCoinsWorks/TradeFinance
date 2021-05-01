@@ -9,24 +9,37 @@ COLORS = {
 }
 
 
+class FibonnaciROI(pg.RectROI):
+    def __init__(self, pos, size, invertible, pen):
+        super(FibonnaciROI, self).__init__(pos, size, invertible=invertible, pen=pen)
+        self.setPos(pos)
+        self.setSize(size)
+        self.addTranslateHandle((0, 0))
+
+
 class Fibonnaci(object):
     def __init__(self, parent=None):
         super(Fibonnaci, self).__init__()
         self.name = "Fibonnaci"
         self.description = "Fibonnaci"
 
-    def run(self, graph=None, position=None):
+    def run(self, graph=None, position=None, size=None):
         self.quotation_plot = graph
-        size_y = (graph.viewRange()[1][1] - graph.viewRange()[1][0]) / 2
-        self.roi = pg.RectROI(pos=[position.x(), position.y()],
-                              size=(4000000.0, size_y),
-                              invertible=True,
-                              pen=pg.mkPen(color=(255, 255, 255),
-                                           width=1),
-                              hoverPen=None,
-                              )
 
-        self.roi.addTranslateHandle((0, 0))
+        if size:
+            width = size[0]
+            height = size[1]
+        else:
+            height = (graph.viewRange()[1][1] - graph.viewRange()[1][0]) / 2
+            width = 4000000.0
+
+        self.roi = FibonnaciROI(pos=[position.x(), position.y()],
+                                size=(width, height),
+                                invertible=True,
+                                pen=pg.mkPen(color=(255, 255, 255),
+                                             width=1),
+                                )
+        # self.roi.addTranslateHandle((0, 0))
         self.quotation_plot.addItem(self.roi)
 
         self.set_fibonnaci_levels()
@@ -85,7 +98,6 @@ class Fibonnaci(object):
         self.quotation_plot.addItem(self.label_23)
         self.quotation_plot.addItem(self.label_100)
         self.quotation_plot.addItem(self.label_1)
-
 
     def _set_fibonnaci_level(self, prc=50.0):
         """This method plot line for each retracement

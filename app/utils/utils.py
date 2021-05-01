@@ -11,6 +11,7 @@ from resources.style import style
 
 from sklearn import preprocessing
 import numpy as np
+import pandas as pd
 from scipy import signal
 
 from PySide2.QtGui import QPixmap
@@ -359,7 +360,7 @@ def check_french_ticker(ticker):
     :return: str
     """
     try:
-        ticker = ticker.split('.')[0]
+        ticker, = ticker.split('.')
     except:
         pass
 
@@ -373,3 +374,36 @@ def clear_layout(layout):
     """
     for i in reversed(range(layout.count())):
         layout.itemAt(i).widget().setParent(None)
+
+
+def get_compagnies_from_secteurs(industry):
+    """This method return a list of compagnies from
+       the activity sector.
+    """
+    SCRIPT_PATH = os.path.dirname(__file__)
+    with open(os.path.join(SCRIPT_PATH, "data", "industries.json"), "r") as f:
+        same = json.load(f)
+
+    for indu, tickers in same.items():
+        if industry == indu:
+            return tickers
+
+def get_compagny_yield():
+    """This method get the % AAA Corporate.
+    """
+    link = cst.AAA_YIELD_link
+    yield_ = pd.read_html(link, header=0)[10].keys()[1]
+    yield_ = float(str(yield_.replace('%', '')))
+    return yield_
+
+def file_from_path(path):
+    if not os.path.exists(os.path.dirname(path)):
+        try:
+            os.mkdir(os.path.dirname(path))
+            return True
+        except Exception as error:  # TODO cath correct error
+            print(error)
+            return False
+    if not os.path.exists(path):
+        open(path, "w")
+    return True

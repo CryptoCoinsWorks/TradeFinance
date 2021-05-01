@@ -30,3 +30,5 @@ START_DATE = "2018-01-01"
 PERIODE = "1y"
 INTERVAL = "1d"
 INTERVAL_MONTH = "1mo"
+
+AAA_YIELD_link = "https://ycharts.com/indicators/moodys_seasoned_aaa_corporate_bond_yield"

@@ -1,8 +1,16 @@
+import os
+import json
 import numpy as np
 from utils import utils
 import pyqtgraph as pg
+from pprint import pprint
+from add_ons.charts import fibonnaci
 from utils import constants as cst
+from libs.roi_manager import ROIManager
+from libs.widgets.roi_lines import *
 from PySide2 import QtCore, QtGui, QtWidgets
+from pyqtgraph.parametertree.Parameter import Parameter, registerParameterType
+
 
 from libs.graph.candlestick import CandlestickItem
 from libs.events_handler import EventHandler
@@ -11,6 +19,7 @@ from libs.events_handler import EventHandler
 color = (53, 53, 53)
 pg.setConfigOption("background", color)
 pg.setConfigOptions(antialias=True)
+
 
 
 class GraphView(pg.GraphicsLayoutWidget):
@@ -40,8 +49,6 @@ class GraphView(pg.GraphicsLayoutWidget):
         self.g_quotation.scene().sigMouseClicked.connect(
             self._on_mouse_clicked
         )
-
-
 
     def plot_quotation(self, data, ticker, clear=True):
         """Plot the quotation
@@ -84,7 +91,6 @@ class GraphView(pg.GraphicsLayoutWidget):
                                    yMin=np.amin(data[cst.CLOSE])-price_variation,
                                    yMax=np.amax(data[cst.CLOSE])+price_variation,
                                    )
-
         self.set_cross_hair()
 
     def set_cross_hair(self):
@@ -158,9 +164,6 @@ class GraphView(pg.GraphicsLayoutWidget):
     def mousePressEvent(self, event):
         self.signals.sig_graph_mouse_pressed.emit(event)
         super(GraphView, self).mousePressEvent(event)
-        # from pprint import pprint
-        # x = self.g_quotation.allChildItems()
-        # pprint(x)
 
     def mouseReleaseEvent(self, event):
         self.signals.sig_graph_mouse_released.emit(event)
@@ -206,11 +209,33 @@ class GraphView(pg.GraphicsLayoutWidget):
         self._add_ticker_right_axis()
 
     def mouseDragEvent(self, ev, axis=None):
-        print('lqlqllq')
         self.updateScaleBox(ev.pos(), ev.pos())
 
+    def save_items(self):
+        path = os.path.join(os.environ.get("APP_HOME"), "chart", "{}_chart.json".format(self.ticker))
+        if utils.file_from_path(path):
+            settings = list()
+            for item in self.g_quotation.allChildItems():
+                setting = dict()
+                if isinstance(item, TrendLine):
+                    setting['TrendLine'] = item.saveState()
+                if isinstance(item, fibonnaci.FibonnaciROI):
+                    setting['FibonnaciROI'] = item.saveState()
+                if isinstance(item, VerticalLine):
+                    setting['VerticalLine'] = {'pos': item.value()}
+                if isinstance(item, HorizontalLine):
+                    setting['HorizontalLine'] = {'pos': item.value()}
+                if setting:
+                    settings.append(setting)
+            with open(path, 'w') as f:
+                json.dump(settings, f, indent=4)
 
-
+    def restore_items(self, parent, ticker):
+        path = os.path.join(os.environ.get("APP_HOME"), "chart", "{}_chart.json".format(ticker))
+        if os.path.isfile(path):
+            with open(path, 'r') as f:
+                setting = json.load(f)
+            ROIManager.restore_items(self=parent, path=setting, graph=self.g_quotation)
 
 class GraphWidget(QtWidgets.QWidget):
     """Widget wrapper for the graph"""
