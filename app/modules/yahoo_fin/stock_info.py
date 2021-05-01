@@ -644,16 +644,26 @@ def get_analysts_info(ticker):
     """
 
     analysts_site = (
-        "https://finance.yahoo.com/quote/" + ticker + "/analysts?p=" + ticker
+        "https://finance.yahoo.com/quote/" + ticker + "/analysis?p=" + ticker
     )
+    print(analysts_site)
+    from pprint import pprint
 
-    tables = pd.read_html(analysts_site, header=0)
+    tables = pd.read_html(analysts_site)
+    r = requests.get(analysts_site)
+    # soup = BeautifulSoup(response.text, 'html.parser')
 
+    data = json.loads(re.search('root\.App\.main\s*=\s*(.*);', r.text).group(1))
+
+    field = [t for t in data["context"]["dispatcher"]["stores"]["QuoteSummaryStore"]['financialsTemplate']]
+    #          t["period"] == "+5y"][0]
+
+    print(field)
     table_names = [table.columns[0] for table in tables]
 
     table_mapper = {key: val for key, val in zip(table_names, tables)}
 
-    return table_mapper
+    return "table_mapper"
 
 
 def get_live_price(ticker):

@@ -64,7 +64,10 @@
                     "type": "resources",
                     "value": ":/svg/horizontal-line.svg"
                 },
-                "action": "method_to_call",
+                "action": "roi_manager.set_tool",
+                "args": {
+                    "tool": "horizontal_line"
+                },
                 "tooltip": "Horizontal Line",
                 "text": "Horizontal Line",
                 "shortcut": "Alt+H",
@@ -76,7 +79,10 @@
                     "type": "resources",
                     "value": ":/svg/horizontal-ray.svg"
                 },
-                "action": "method_to_call",
+                "action": "roi_manager.set_tool",
+                "args": {
+                    "tool": "vertical_line"
+                },
                 "tooltip": "Horizontal Ray",
                 "text": "Horizontal Ray",
                 "checkable": false

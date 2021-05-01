@@ -15,6 +15,8 @@
 #  - Évolution du ratio de rotation des actifs (1 point s'il est plus élevé dans l'année en cours par rapport à la précédente, 0 dans le cas contraire);
 
 import datetime
+import requests
+import json, re
 from pprint import pprint
 from utils import utils as utl
 from modules.yahoo_fin import stock_info as sf
@@ -36,6 +38,7 @@ class AnalyseFondamental(object):
 
         self.datas = {}
         self.data_analyse = {}
+        self.get_analysis_datas(ticker)
 
         self.get_histoty_prices(ticker)
         self.set_var()
@@ -44,7 +47,17 @@ class AnalyseFondamental(object):
 
         self.analyse = AnalyseData(self.data_analyse)
         self.extend_dict_data()
-        self.tes()
+        # self.tes()
+
+    def get_analysis_datas(self, ticker):
+        r = requests.get("https://finance.yahoo.com/quote/{}/analysis?p={}".format(ticker, ticker))
+
+        data = json.loads(re.search('root\.App\.main\s*=\s*(.*);', r.text).group(1))
+
+        field = [t for t in data["context"]["dispatcher"]["stores"]["QuoteSummaryStore"]["earningsTrend"]["trend"] if
+                 t["period"] == "+5y"][0]
+
+        self.growth = field["growth"]["fmt"].replace('%', '')
 
     def set_var(self):
         self.actions = None
@@ -207,7 +220,7 @@ class AnalyseFondamental(object):
         self.dividendes_ratio()
         self.roe_roa_ratio(roa=False)
         self.roe_roa_ratio(roa=True)
-
+        self.datas["Growth"] = self.growth
 
     def tes(self):
         for key, value in self.datas.items():
@@ -231,6 +244,7 @@ class AnalyseFondamental(object):
         self.data_analyse["Trésorie"] = self.cash_flow.values.tolist()
         self.data_analyse["YEAR"] = self.datas["YEAR"]
         self.data_analyse["PRICE"] = self.price_dates
+        self.data_analyse['Growth'] = self.growth
 
     def get_histoty_prices(self, tick):
         dates = self.resultat_datas.keys()
@@ -262,7 +276,13 @@ class AnalyseFondamental(object):
     def debt_ratio(self):
         dettes = utl.remove_nan(self.debt.values.tolist())
         ebitda = utl.remove_nan(self.ebitda.values.tolist())
-        dette_calcul = [round(i / j) for i, j in zip(dettes, ebitda)]
+        a = [0, 0.0]
+        if any(x in a for x in ebitda):
+            dette_calcul = [0 for i in range(5)]
+        elif any(x in a for x in dettes):
+            dette_calcul = [0 for i in range(5)]
+        else:
+            dette_calcul = [round(i / j) for i, j in zip(dettes, ebitda)]
         self.datas["Dette"] = ["{}%".format(i) for i in dette_calcul]
         self.data_analyse["Dette"] = dette_calcul
 
@@ -341,7 +361,8 @@ class AnalyseFondamental(object):
 
 
 if __name__ == "__main__":
-    test = AnalyseFondamental("AAPL")
-    pprint(test.datas)
-    # pprint(test.analyse.__dict__)
-    # testq = AnalyseFondamental("BN.PA")
+    ricker = "BNP.PA"
+    test = AnalyseFondamental(ricker)
+    # pprint(test.datas)
+    pprint(test.analyse.__dict__)
+    # pprint(testq.analyse.__dict__)

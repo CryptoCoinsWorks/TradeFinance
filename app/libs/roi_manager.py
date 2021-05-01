@@ -1,5 +1,6 @@
 import time
 import pyqtgraph as pg
+from libs.widgets.roi_lines import TrendLine, HorizontalLine, VerticalLine
 from PySide2 import QtCore, QtWidgets
 from add_ons.charts import fibonnaci
 from add_ons.charts import measure as ms
@@ -81,8 +82,10 @@ class ROIManager(QtCore.QObject):
 
     @QtCore.Slot(object)
     def _on_mouse_released(self, event):
-        pass
+        # self.save_item()
+        # self.restore_items()
         # print("Released", event)
+        pass
 
     @QtCore.Slot(object)
     def _on_mouse_moved(self, event):
@@ -111,18 +114,31 @@ class ROIManager(QtCore.QObject):
         """
         self.remove_roi(roi=roi)
 
-
     def bounded_line_drawer(self, initial_pos, **kwargs):
         """Draw a bounded line
         """
-        roi = pg.LineSegmentROI((initial_pos, initial_pos), removable=True)
+        # roi = pg.LineSegmentROI((initial_pos, initial_pos), removable=True)
+        roi = TrendLine((initial_pos, initial_pos))
         self.current_handle = roi.getHandles()[-1]
         self.current_graph.addItem(roi)
         roi.sigRemoveRequested.connect(self._on_roi_remove_requested)
 
+    def horizontal_line(self, initial_pos, **kwargs):
+        h_line = HorizontalLine(initial_pos.x())
+        self.current_graph.addItem(h_line)
+
+    def vertical_line(self, initial_pos, **kwargs):
+        h_line = VerticalLine(initial_pos.x())
+        self.current_graph.addItem(h_line)
+
     def fibonnaci(self, initial_pos, **kwargs):
+        size = None
+        if kwargs.get('size'):
+            size = kwargs.get('size')
+        if kwargs.get('current_graph'):
+            self.current_graph = kwargs.get('current_graph')
         self.fibo = fibonnaci.Fibonnaci(self)
-        self.fibo_item = self.fibo.run(graph=self.current_graph, position=initial_pos)
+        self.fibo_item = self.fibo.run(graph=self.current_graph, position=initial_pos, size=size)
         self.fibo_item.sigRegionChanged.connect(self.fibo.move_items)
         self.fibo_item.sigRemoveRequested.connect(self._on_roi_remove_requested)
         self.unset_tool()
@@ -132,3 +148,22 @@ class ROIManager(QtCore.QObject):
         self.release = True
         self.measu = ms.Measure(self)
         self.position_origin = initial_pos
+
+    def restore_items(self, path, graph):
+        for item in path:
+            for widget, state in item.items():
+                if widget == "LineSegmentROI":
+                    roi = pg.LineSegmentROI((0, 0), removable=True)
+                    roi.setState(state)
+                    self.current_graph.addItem(roi)
+                if widget == "FibonnaciROI":
+                    position = QtCore.QPointF(state['pos'][0], state['pos'][1])
+                    self.fibonnaci(initial_pos=position, size=state['size'], current_graph=graph)
+                if widget == "VerticalLine":
+                    position = state['pos']
+                    v_line = VerticalLine(pos=position)
+                    self.current_graph.addItem(v_line)
+                if widget == "HorizontalLine":
+                    position = state['pos']
+                    h_line = HorizontalLine(pos=position)
+                    self.current_graph.addItem(h_line)

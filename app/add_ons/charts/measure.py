@@ -42,6 +42,7 @@ class Measure(object):
             self.rbScaleBox.setBrush(pg.mkBrush(color_brush))
             self.rbScaleBox.setZValue(1e9)
             center_legend = p1.toTuple()[0] + ((p2.toTuple()[0] - p1.toTuple()[0]) / 2)
+            # self.save_item(item=self.rbScaleBox)
 
             self.legend = self._set_legend(x=center_legend,
                                            y=p2.toTuple()[1],
