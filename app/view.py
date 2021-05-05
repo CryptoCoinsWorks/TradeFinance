@@ -1,4 +1,5 @@
 import os
+import json
 
 from PySide2 import QtCore, QtGui, QtWidgets
 import yfinance as yf
@@ -12,6 +13,7 @@ from libs.io.favorite_settings import FavoritesManager
 from libs.widgets.sentimentals_widget import Sentimental_Widget_Item
 from libs.splashcreen import SplashScreen
 from libs.roi_manager import ROIManager
+from libs.widgets import main_toolbar
 
 from ui import main_window
 
@@ -148,6 +150,7 @@ class MainWindow(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
             except Exception as error:
                 print(error)
         os.environ["APP_HOME"] = app_home
+        self.settings_datas()
 
     def _retrieve_data(self):
         """Retrieve data from the API"""
@@ -242,8 +245,13 @@ class MainWindow(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
     def _thread_articles(self, ticker):
         """This method get fundamentals in a threadpool.
         """
-        # pass
         self.wgt_articles._on_get_articles(ticker=ticker)
+
+    def settings_datas(self):
+        setting_path = os.path.join(os.getenv('APP_HOME'), "setting.json")
+        if not os.path.exists(setting_path):
+            with open(setting_path, 'w') as f:
+                json.dump(dict(), f, indent=4)
 
     def resizeEvent(self, event):
         if self.tickers_dialog:

@@ -26,6 +26,7 @@ from libs.markets_widget import MarketsWidget
 from libs.widgets.sentimentals_widget import Sentimental_Widget
 from libs.widgets.order_widget import OrderView
 from libs.widgets.orders_list_widget import OrderList
+from libs.widgets.main_toolbar import Main_ToolBar
 
 import resources_rc
 
@@ -276,6 +277,9 @@ class Ui_MainWindow(object):
         self.wgt_order_list.setObjectName(u"wgt_order_list")
         self.dock_wgt_order_list.setWidget(self.wgt_order_list)
         MainWindow.addDockWidget(Qt.BottomDockWidgetArea, self.dock_wgt_order_list)
+        self.top_toolbar = Main_ToolBar(MainWindow)
+        self.top_toolbar.setObjectName(u"top_toolbar")
+        MainWindow.addToolBar(Qt.TopToolBarArea, self.top_toolbar)
 
         self.menubar.addAction(self.menuOptions.menuAction())
         self.menuOptions.addAction(self.action_reload_indicators)
@@ -305,5 +309,6 @@ class Ui_MainWindow(object):
         self.dock_wgt_favorites.setWindowTitle(QCoreApplication.translate("MainWindow", u"Order", None))
         self.dock_wgt_order.setWindowTitle(QCoreApplication.translate("MainWindow", u"Favorites", None))
         self.dock_wgt_order_list.setWindowTitle(QCoreApplication.translate("MainWindow", u"Positions", None))
+        self.top_toolbar.setWindowTitle(QCoreApplication.translate("MainWindow", u"toolBar", None))
     # retranslateUi
 

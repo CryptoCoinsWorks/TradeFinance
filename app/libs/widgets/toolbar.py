@@ -16,7 +16,7 @@ class ToolBar(QtWidgets.QToolBar):
         self.signals = EventHandler()
         self._actions = []
 
-        self.setIconSize(QtCore.QSize(20, 20))
+        self.setIconSize(QtCore.QSize(25, 25))
         self.toolbar_settings_file = os.path.join(
             os.path.dirname(os.path.dirname(os.path.dirname(__file__))),
             "add_ons",
