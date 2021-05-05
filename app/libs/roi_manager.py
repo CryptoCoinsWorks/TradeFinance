@@ -1,6 +1,6 @@
 import time
 import pyqtgraph as pg
-from libs.widgets.roi_lines import TrendLine, HorizontalLine, VerticalLine
+from libs.widgets.roi_lines import *
 from PySide2 import QtCore, QtWidgets
 from add_ons.charts import fibonnaci
 from add_ons.charts import measure as ms
@@ -18,6 +18,7 @@ class ROIManager(QtCore.QObject):
         self.current_handle = None
         self.current_graph = None
         self.measure_widget = False
+        self.rect_widget = False
         self.release = False
         self.position_origin = None
         self._graph = self.parent().wgt_graph.graph
@@ -79,12 +80,15 @@ class ROIManager(QtCore.QObject):
                 self.measure_widget = False
                 self.measu.remove()
                 self.unset_tool()
+        if self.rect_widget:
+            if self.release:
+                self.release = False
+                self.position_origin = None
+                self.rect_widget = False
+            self.unset_tool()
 
     @QtCore.Slot(object)
     def _on_mouse_released(self, event):
-        # self.save_item()
-        # self.restore_items()
-        # print("Released", event)
         pass
 
     @QtCore.Slot(object)
@@ -95,6 +99,9 @@ class ROIManager(QtCore.QObject):
         if self.measure_widget:
             pos = self.vb.mapSceneToView(event.pos())
             self.measu.run(graph=self.current_graph, p1=self.position_origin, p2=pos)
+        if self.rect_widget:
+            pos = self.vb.mapSceneToView(event.pos())
+            # self.rect_widget
 
     @QtCore.Slot(list, object)
     def _on_roi_add_requested(self, objects, event):
@@ -117,21 +124,33 @@ class ROIManager(QtCore.QObject):
     def bounded_line_drawer(self, initial_pos, **kwargs):
         """Draw a bounded line
         """
-        # roi = pg.LineSegmentROI((initial_pos, initial_pos), removable=True)
         roi = TrendLine((initial_pos, initial_pos))
         self.current_handle = roi.getHandles()[-1]
         self.current_graph.addItem(roi)
         roi.sigRemoveRequested.connect(self._on_roi_remove_requested)
 
     def horizontal_line(self, initial_pos, **kwargs):
-        h_line = HorizontalLine(initial_pos.x())
+        """Draw a Horizontal Line.
+        """
+        h_line = HorizontalLine(initial_pos.y())
         self.current_graph.addItem(h_line)
 
     def vertical_line(self, initial_pos, **kwargs):
+        """Draw a Vertical Line.
+        """
         h_line = VerticalLine(initial_pos.x())
         self.current_graph.addItem(h_line)
 
+    def rectangle_zone(self, initial_pos, **kwargs):
+        self.rect_widget = True
+        self.release = True
+        rect = RectangleRoi(pos=initial_pos)
+        self.current_graph.addItem(rect)
+        self.unset_tool()
+
     def fibonnaci(self, initial_pos, **kwargs):
+        """Draw a Fibonnaci level.
+        """
         size = None
         if kwargs.get('size'):
             size = kwargs.get('size')
@@ -144,26 +163,30 @@ class ROIManager(QtCore.QObject):
         self.unset_tool()
 
     def measure_fct(self, initial_pos, **kwargs):
+        """Draw a Measure and get %.
+        """
         self.measure_widget = True
         self.release = True
         self.measu = ms.Measure(self)
         self.position_origin = initial_pos
 
     def restore_items(self, path, graph):
+        """This method restore Tools in chart from previous save.
+        """
         for item in path:
             for widget, state in item.items():
-                if widget == "LineSegmentROI":
-                    roi = pg.LineSegmentROI((0, 0), removable=True)
+                if widget == "TrendLine":
+                    roi = TrendLine((0, 0), removable=True)
                     roi.setState(state)
-                    self.current_graph.addItem(roi)
+                    graph.addItem(roi)
                 if widget == "FibonnaciROI":
                     position = QtCore.QPointF(state['pos'][0], state['pos'][1])
                     self.fibonnaci(initial_pos=position, size=state['size'], current_graph=graph)
                 if widget == "VerticalLine":
                     position = state['pos']
                     v_line = VerticalLine(pos=position)
-                    self.current_graph.addItem(v_line)
+                    graph.addItem(v_line)
                 if widget == "HorizontalLine":
                     position = state['pos']
                     h_line = HorizontalLine(pos=position)
-                    self.current_graph.addItem(h_line)
+                    graph.addItem(h_line)
