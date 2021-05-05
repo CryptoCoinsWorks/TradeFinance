@@ -39,7 +39,7 @@ class Fibonnaci(object):
                                 pen=pg.mkPen(color=(255, 255, 255),
                                              width=1),
                                 )
-        # self.roi.addTranslateHandle((0, 0))
+        self.roi.addTranslateHandle((0, 0))
         self.quotation_plot.addItem(self.roi)
 
         self.set_fibonnaci_levels()

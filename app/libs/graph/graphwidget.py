@@ -212,7 +212,12 @@ class GraphView(pg.GraphicsLayoutWidget):
         self.updateScaleBox(ev.pos(), ev.pos())
 
     def save_items(self):
-        path = os.path.join(os.environ.get("APP_HOME"), "chart", "{}_chart.json".format(self.ticker))
+        path = os.path.join(os.environ.get("APP_HOME"),
+                            "chart",
+                            "{}_chart.json".format(self.ticker)
+                            )
+        if not self.ticker:
+            return
         if utils.file_from_path(path):
             settings = list()
             for item in self.g_quotation.allChildItems():
