@@ -28,8 +28,12 @@
     <file>svg/line.svg</file>
     <file>svg/dot-line.svg</file>
     <file>svg/dash-line.svg</file>
+    <file>svg/rectangle.svg</file>
+    <file>svg/elliot.svg</file>
+    <file>svg/triangle.svg</file>
+    <file>svg/canal.svg</file>
+    <file>svg/vertical-line.svg</file>
     <file>style/style.qss</file>
-<!--    <file>toolbar/toolbar.json</file>-->
     <file>img/no_file.png</file>
     <file>img/splashscreen.jpg</file>
     <file>font/Marianne/fontes_desktop/Marianne-Bold.otf</file>

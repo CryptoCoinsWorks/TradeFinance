@@ -1,3 +1,7 @@
+import os
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives import serialization
+
 DEV = True
 
 TITLE = "TRADING VISUALISATION"
@@ -31,4 +35,8 @@ PERIODE = "1y"
 INTERVAL = "1d"
 INTERVAL_MONTH = "1mo"
 
+DATABASE = db_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data', "users.db")
+
 AAA_YIELD_link = "https://ycharts.com/indicators/moodys_seasoned_aaa_corporate_bond_yield"
+
+PRIVATE_KEY = 'pRmgMa8T0INjEAfksaq2aafzoZXEuwKI7wDe4c1F8AY='

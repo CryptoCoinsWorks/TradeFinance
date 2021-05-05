@@ -455,6 +455,17 @@
    </attribute>
    <widget class="OrderList" name="wgt_order_list"/>
   </widget>
+  <widget class="Main_ToolBar" name="top_toolbar">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+  </widget>
   <action name="action_reload_indicators">
    <property name="text">
     <string>Reload Indicators</string>
@@ -541,6 +552,11 @@
    <extends>QWidget</extends>
    <header>libs.widgets.orders_list_widget.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>Main_ToolBar</class>
+   <extends>QToolBar</extends>
+   <header>libs.widgets.main_toolbar.h</header>
   </customwidget>
  </customwidgets>
  <resources>

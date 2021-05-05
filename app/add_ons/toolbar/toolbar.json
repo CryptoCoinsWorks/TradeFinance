@@ -77,14 +77,14 @@
                 "type": "button",
                 "icon": {
                     "type": "resources",
-                    "value": ":/svg/horizontal-ray.svg"
+                    "value": ":/svg/vertical-line.svg"
                 },
                 "action": "roi_manager.set_tool",
                 "args": {
                     "tool": "vertical_line"
                 },
-                "tooltip": "Horizontal Ray",
-                "text": "Horizontal Ray",
+                "tooltip": "Vertical Line",
+                "text": "Vertical Line",
                 "checkable": false
             }
         ]
@@ -130,5 +130,32 @@
         "tooltip": "Measure",
         "text": "Measure",
         "checkable": false
+    },
+    {
+        "type": "button",
+        "icon": {
+            "type": "resources",
+            "value": ":/svg/brush.svg"
+        },
+        "action": "method_to_call",
+        "tooltip": "Draw",
+        "text": "Draw",
+        "checkable": false,
+        "submenu": [
+            {
+                "type": "button",
+                "icon": {
+                    "type": "resources",
+                    "value": ":/svg/rectangle.svg"
+                },
+                "action": "roi_manager.set_tool",
+                "args": {
+                    "tool": "rectangle_zone"
+                },
+                "tooltip": "Recatngle",
+                "text": "Recatngle",
+                "checkable": false
+            }
+            ]
     }
 ]
