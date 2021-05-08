@@ -4,7 +4,6 @@ import json
 import sqlite3
 import hashlib, uuid, hmac
 from utils import constants as cst
-from cryptography.fernet import Fernet
 
 
 ##### DATABASE Functions #####
@@ -30,7 +29,7 @@ def create_user(db_connection, user, mail, password):
 def create_position(db_connection, data):
     """Create a Data when a position is create.
     """
-    user_id = get_user_id(db_connection, "admin")[0]
+    user_id = get_user_id(db_connection, cst.LOGIN)[0]
     req = """INSERT INTO positions (user_id, ticker, order_type, order_execution, amount,
                                     price, stop_price, limit_price, date, take_profit,
                                     stop_loss) VALUES (?,?,?,?,?,?,?,?,?,?,?)"""
@@ -48,7 +47,7 @@ def add_favorite(db_connection, ticker, name):
     req_check = """SELECT * FROM favorites WHERE user_id=? AND ticker=? AND name=?"""
     req = """INSERT OR IGNORE INTO favorites (user_id, ticker, name) VALUES (?, ?, ?)"""
     cursor = db_connection.cursor()
-    user_id = get_user_id(db_connection, "admin")[0]
+    user_id = get_user_id(db_connection, cst.LOGIN)[0]
     if not cursor.execute(req_check, (user_id, ticker, name)).fetchall():
         cursor.execute(req, (user_id, ticker, name))
         db_connection.commit()
@@ -60,7 +59,7 @@ def add_chart(db_connection, ticker, data):
     """
     req = """SELECT * FROM charts WHERE user_id = ? AND ticker = ?"""
     cursor = db_connection.cursor()
-    id = get_user_id(db_connection, "admin")[0]
+    id = get_user_id(db_connection, cst.LOGIN)[0]
     if not cursor.execute(req, (id, ticker)).fetchone():
         req = """INSERT INTO charts (user_id, data, ticker) VALUES (?, ?, ?)"""
         cursor.execute(req, [id, json.dumps(data), ticker])
@@ -76,7 +75,7 @@ def get_user_id(db_connection, user_name):
     """
     req = """SELECT user_id FROM users WHERE user_username = ?"""
     cursor = db_connection.cursor()
-    cursor.execute(req, (user_name,))
+    cursor.execute(req, (user_name['user'],))
     return cursor.fetchone()
 
 
@@ -117,6 +116,7 @@ def get_user_by_id(db_connection, user_id):
 def get_chart_data(db_connection, ticker):
     """This method get data for a select chart.
     """
+    print(cst.LOGIN)
     req = """SELECT data FROM charts WHERE ticker = ?"""
     cursor = db_connection.cursor()
     if cursor.execute(req, (ticker,)).fetchone():
@@ -130,7 +130,7 @@ def get_positions(db_connection):
     """
     req = """SELECT * FROM positions WHERE user_id = ?"""
     cursor = db_connection.cursor()
-    id = get_user_id(db_connection, "admin")[0]
+    id = get_user_id(db_connection, cst.LOGIN)[0]
     cursor.execute(req, (id,))
     return cursor.fetchall()
 
@@ -138,7 +138,7 @@ def get_positions(db_connection):
 def get_position_by_id(db_connection, id):
     req = """SELECT * FROM positions WHERE user_id=? and position_id=?"""
     cursor = db_connection.cursor()
-    user_id = get_user_id(db_connection, "admin")[0]
+    user_id = get_user_id(db_connection, cst.LOGIN)[0]
     cursor.execute(req, (user_id, id))
     return cursor.fetchone()
 
@@ -150,7 +150,7 @@ def update_position(db_connection, id, data):
                                     price=?, stop_price=?, limit_price=?, date=?, take_profit=?,
                                     stop_loss=? WHERE user_id=? AND position_id=?"""
     cursor = db_connection.cursor()
-    user_id = get_user_id(db_connection, "admin")[0]
+    user_id = get_user_id(db_connection, cst.LOGIN)[0]
     cursor.execute(req, (data[1], data[2], data[3], data[4], data[5], data[6],
                          data[7], data[8], data[9], data[10], user_id, id))
     db_connection.commit()
@@ -161,7 +161,7 @@ def close_position(db_connection, id):
     """
     req = """DELETE FROM positions WHERE user_id=? AND position_id=?"""
     cursor = db_connection.cursor()
-    user_id = get_user_id(db_connection, "admin")[0]
+    user_id = get_user_id(db_connection, cst.LOGIN)[0]
     cursor.execute(req, (user_id, id))
     db_connection.commit()
 
@@ -183,7 +183,7 @@ def get_favorite_for_user(db_connection):
     """
     req = """SELECT * FROM favorites WHERE user_id=?"""
     cursor = db_connection.cursor()
-    user_id = get_user_id(db_connection, "admin")[0]
+    user_id = get_user_id(db_connection, cst.LOGIN)[0]
     cursor.execute(req, (user_id,))
     data = cursor.fetchall()
     favorites = list()
@@ -199,7 +199,7 @@ def remove_fav(db_connection, ticker, name):
     """
     req = """DELETE FROM favorites WHERE user_id=? AND ticker=? AND name=?"""
     cursor = db_connection.cursor()
-    user_id = get_user_id(db_connection, "admin")[0]
+    user_id = get_user_id(db_connection, cst.LOGIN)[0]
     cursor.execute(req, (user_id, ticker, name))
     db_connection.commit()
 

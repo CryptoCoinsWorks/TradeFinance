@@ -13,7 +13,7 @@ from libs.io.favorite_settings import FavoritesManager
 from libs.widgets.sentimentals_widget import Sentimental_Widget_Item
 from libs.splashcreen import SplashScreen
 from libs.roi_manager import ROIManager
-from libs.widgets import main_toolbar
+from libs.login_view import LoginView
 
 from ui import main_window
 
@@ -131,6 +131,9 @@ class MainWindow(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
         self.orders_manager.signals.sig_order_loaded.connect(
             self.wgt_order_list._load_positions
         )
+        self.top_toolbar.signals.sig_account.connect(
+            self.set_account
+        )
 
         self.pub_go_welcome.clicked.connect(self.stw_main.slide_in_prev)
         self.pub_go_graph.clicked.connect(self.stw_main.slide_in_next)
@@ -139,9 +142,7 @@ class MainWindow(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
 
         # Action which needs to be loaded after all signals
         self.splash.show_message("Loading Favorites...\n\n")
-        self.favorites_manager.load_favorite()
-        self.orders_manager.load_position()
-
+        self.settings_datas()
         self.splash.hide()
 
     def _init_app_home(self):
@@ -154,7 +155,6 @@ class MainWindow(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
             except Exception as error:
                 print(error)
         os.environ["APP_HOME"] = app_home
-        self.settings_datas()
 
     def _retrieve_data(self):
         """Retrieve data from the API"""
@@ -252,10 +252,26 @@ class MainWindow(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
         self.wgt_articles._on_get_articles(ticker=ticker)
 
     def settings_datas(self):
+        """This method set setting or get account from setting.
+        """
         setting_path = os.path.join(os.getenv('APP_HOME'), "setting.json")
         if not os.path.exists(setting_path):
             with open(setting_path, 'w') as f:
                 json.dump(dict(), f, indent=4)
+                login_account = {}
+        else:
+            with open(setting_path, 'r') as f:
+                login_account = json.load(f)
+        self.load_account(login_account)
+
+    @QtCore.Slot(dict)
+    def load_account(self, account):
+        """This method load all the components and set a variable
+            from a account.
+        """
+        cst.LOGIN = account
+        self.favorites_manager.load_favorite()
+        self.orders_manager.load_position()
 
     def resizeEvent(self, event):
         if self.tickers_dialog:
@@ -269,5 +285,3 @@ class MainWindow(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
     def closeEvent(self, event):
         self.favorites_manager.save_favorites()
         self.wgt_graph.graph.save_items()
-
-

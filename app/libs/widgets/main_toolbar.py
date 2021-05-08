@@ -34,3 +34,4 @@ class Main_ToolBar(QtWidgets.QToolBar):
 
     def launch_login(self):
         self.login.show()
+        self.signals.sig_account.emit(self.login.log_data)

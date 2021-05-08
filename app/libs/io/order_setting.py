@@ -12,14 +12,13 @@ class OrderSettings(QtCore.QObject):
         super(OrderSettings, self).__init__(parent)
 
         # Constants
-        self._app_home = os.environ.get("APP_HOME")
-        self._orders_path = os.path.join(
-            self._app_home, "orders", "orders.json"
-        )
+        self.orders = list()
         self.signals = EventHandler()
         self.db_connection = db_models.connection_to_db(cst.DATABASE)
 
     def load_position(self):
+        if not cst.LOGIN:
+            return self.orders
         self.orders = db_models.get_positions(self.db_connection)
         self.signals.sig_order_loaded.emit(self.orders)
 

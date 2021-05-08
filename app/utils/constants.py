@@ -1,6 +1,4 @@
 import os
-from cryptography.hazmat.backends import default_backend
-from cryptography.hazmat.primitives import serialization
 
 DEV = True
 
@@ -40,3 +38,5 @@ DATABASE = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data', "dat
 AAA_YIELD_link = "https://ycharts.com/indicators/moodys_seasoned_aaa_corporate_bond_yield"
 
 PRIVATE_KEY = "8a0a9af0714144c99ed3dc18ce1d6ed5"
+
+LOGIN = dict()
