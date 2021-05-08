@@ -2,7 +2,8 @@ import os
 import json
 
 from PySide2 import QtCore
-from utils import utils
+from utils import constants as cst
+from utils import db_models
 from libs.events_handler import EventHandler
 
 
@@ -12,11 +13,8 @@ class FavoritesManager(QtCore.QObject):
 
         # Constants
         self.signals = EventHandler()
-        self._app_home = os.environ.get("APP_HOME")
 
-        self._favorites_path = os.path.join(
-            self._app_home, "favorite", "favorite.json"
-        )
+        self.db_connection = db_models.connection_to_db(cst.DATABASE)
         self._favorites = []
 
     def load_favorite(self) -> list:
@@ -27,50 +25,17 @@ class FavoritesManager(QtCore.QObject):
         """
         if not self._check_favorites():
             return self._favorites
-        with open(self._favorites_path, "r") as f:
-            self._favorites = json.load(f)
+        self._favorites = db_models.get_favorite_for_user(self.db_connection)
         self.signals.sig_favorite_loaded.emit(self._favorites)
         return self._favorites
 
     def save_favorites(self):
         """Save favorites into the file"""
-        if not self._check_favorites():
-            self.create_favorite()
-        with open(self._favorites_path, "w") as f:
-            json.dump(self._favorites, f)
+        for favorite in self._favorites:
+            db_models.add_favorite(self.db_connection,
+                                   favorite['ticker'],
+                                   favorite['name'])
         self.signals.sig_favorite_saved.emit(self._favorites)
-
-    def create_favorite(self) -> bool:
-        """Create the favorite file if it doesn't exists
-
-        :return: True if exists, False if the creation failed
-        :rtype: bool
-        """
-        if self._check_favorites():
-            return True
-        if not os.path.exists(os.path.dirname(self._favorites_path)):
-            try:
-                os.mkdir(os.path.dirname(self._favorites_path))
-            except Exception as error:  # TODO cath correct error
-                print(error)
-        # create file in all cases
-        try:
-            open(self._favorites_path, "w").close()
-        except Exception as error:
-            print(error)
-            return False
-        self.signals.sig_favorite_created.emit(self._favorites)
-        return True
-
-    def _check_favorites(self):
-        """Check if the favorite file exists
-
-        :return: True or False
-        :rtype: bool
-        """
-        if os.path.exists(self._favorites_path):
-            return True
-        return False
 
     def add_ticker_favorite(self, ticker_data: dict):
         """Add a new ticker to the favorite
@@ -89,6 +54,7 @@ class FavoritesManager(QtCore.QObject):
         """
         if ticker_data in self._favorites:
             self._favorites.remove(ticker_data)
+            db_models.remove_fav(self.db_connection, ticker=ticker_data['ticker'],name=ticker_data['name'])
             self.signals.sig_favorite_removed.emit(ticker_data)
 
     @QtCore.Slot(dict)
