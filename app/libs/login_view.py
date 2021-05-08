@@ -2,6 +2,7 @@ import re, os
 import json
 from utils import db_models
 from utils import constants as cst
+from libs.events_handler import EventHandler
 from PySide2 import QtWidgets, QtCore
 
 from ui import login_ui
@@ -11,10 +12,12 @@ class LoginView(QtWidgets.QDialog, login_ui.Ui_Dialog):
         super(LoginView, self).__init__(parent=parent)
 
         self.setupUi(self)
+        self.signals = EventHandler()
 
         # Constant
         self.setting_path = None
         self.db_connection = None
+        self.log_data = dict()
         self.error.setText("")
 
         self.btn_tab.toggled.connect(self.change_tab)
@@ -72,8 +75,9 @@ class LoginView(QtWidgets.QDialog, login_ui.Ui_Dialog):
         user = self.lg_email.text().lower()
         txt_password = self.lg_passw.text()
         password = db_models.crypt_password(password=txt_password)
-        print(password)
-        print(db_models.get_all_users(self.db_connection))
+
+        self.log_data = {"password": password, "user": user}
+        # print(log_data)
 
         type_field = "user_username"
         if self.sanity_check_validation_mail(user):
@@ -88,10 +92,10 @@ class LoginView(QtWidgets.QDialog, login_ui.Ui_Dialog):
             self.error.setText("Login Fail.")
             return
 
-        # with open(self.setting_path, 'w') as f:
-        #     pref = {"last_login": {"user": user, "password": password}}
-        #     json.dump(pref, f, indent=4)
-
+        if self.checkBox.isChecked():
+            with open(self.setting_path, 'w') as f:
+                pref = {"last_login": {"user": user, "password": password}}
+                json.dump(pref, f, indent=4)
         self.close()
 
     def sanity_check_validation_mail(self, mail):
@@ -116,4 +120,4 @@ class LoginView(QtWidgets.QDialog, login_ui.Ui_Dialog):
         self.setting_path = os.path.join(os.getenv('APP_HOME'), "setting.json")
         self.db_connection = db_models.connection_to_db(cst.DATABASE)
         self.load_ui()
-        super(LoginView, self).show()
+        super(LoginView, self).exec_()

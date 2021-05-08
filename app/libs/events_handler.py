@@ -46,3 +46,5 @@ class EventHandler(QtCore.QObject):
     sig_graph_mouse_released = QtCore.Signal(object)
 
     sig_new_item = QtCore.Signal(object)
+
+    sig_account = QtCore.Signal(dict)

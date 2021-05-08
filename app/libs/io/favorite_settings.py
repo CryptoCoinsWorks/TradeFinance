@@ -23,7 +23,7 @@ class FavoritesManager(QtCore.QObject):
         :return: The loaded favorite
         :rtype: list
         """
-        if not self._check_favorites():
+        if not cst.LOGIN:
             return self._favorites
         self._favorites = db_models.get_favorite_for_user(self.db_connection)
         self.signals.sig_favorite_loaded.emit(self._favorites)

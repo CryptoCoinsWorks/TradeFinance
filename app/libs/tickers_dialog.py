@@ -113,5 +113,4 @@ class TickersDialogWindow(
         :param favorite: List of favorite
         :type favorite: list
         """
-        print(favorite)
         self.update_ticker_favorite_state(favorite=favorite)
