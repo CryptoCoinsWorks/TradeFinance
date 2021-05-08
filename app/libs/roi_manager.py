@@ -170,23 +170,24 @@ class ROIManager(QtCore.QObject):
         self.measu = ms.Measure(self)
         self.position_origin = initial_pos
 
-    def restore_items(self, path, graph):
+    def restore_items(self, all_items, graph):
         """This method restore Tools in chart from previous save.
         """
-        for item in path:
-            for widget, state in item.items():
-                if widget == "TrendLine":
-                    roi = TrendLine((0, 0), removable=True)
-                    roi.setState(state)
-                    graph.addItem(roi)
-                if widget == "FibonnaciROI":
-                    position = QtCore.QPointF(state['pos'][0], state['pos'][1])
-                    self.fibonnaci(initial_pos=position, size=state['size'], current_graph=graph)
-                if widget == "VerticalLine":
-                    position = state['pos']
-                    v_line = VerticalLine(pos=position)
-                    graph.addItem(v_line)
-                if widget == "HorizontalLine":
-                    position = state['pos']
-                    h_line = HorizontalLine(pos=position)
-                    graph.addItem(h_line)
+        if all_items:
+            for item in all_items:
+                for widget, state in item.items():
+                    if widget == "TrendLine":
+                        roi = TrendLine((0, 0), removable=True)
+                        roi.setState(state)
+                        graph.addItem(roi)
+                    if widget == "FibonnaciROI":
+                        position = QtCore.QPointF(state['pos'][0], state['pos'][1])
+                        self.fibonnaci(initial_pos=position, size=state['size'], current_graph=graph)
+                    if widget == "VerticalLine":
+                        position = state['pos']
+                        v_line = VerticalLine(pos=position)
+                        graph.addItem(v_line)
+                    if widget == "HorizontalLine":
+                        position = state['pos']
+                        h_line = HorizontalLine(pos=position)
+                        graph.addItem(h_line)

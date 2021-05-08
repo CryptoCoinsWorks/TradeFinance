@@ -20,6 +20,7 @@ from ui import main_window
 from utils import utils
 from utils import utils_orders
 from utils import constants as cst
+from utils import db_models
 
 SCRIPT_PATH = os.path.dirname(__file__)
 
@@ -70,6 +71,9 @@ class MainWindow(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
         self.tickers_dialog.signal.sig_ticker_removed_favorite.connect(
             self.wgt_favorites._on_favorite_removed
         )
+        self.favorites_manager.signals.sig_favorite_loaded.connect(
+            self.tickers_dialog._on_favorite_loaded
+        )
         self.wgt_favorites.signals.sig_favorite_clicked.connect(
             self._on_ticker_selected
         )
@@ -118,7 +122,7 @@ class MainWindow(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
         self.wgt_order.signals.sig_order_added.connect(
             self.wgt_graph.graph.draw_position
         )
-        self.wgt_order.signals.sig_order_added.connect(
+        self.orders_manager.signals.sig_order_create.connect(
             self.wgt_order_list._load_positions
         )
         self.wgt_order_list.signals.sig_order_close.connect(

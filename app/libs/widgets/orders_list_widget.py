@@ -1,5 +1,6 @@
 from datetime import datetime
-from utils import utils_orders
+from utils import constants as cst
+from utils import db_models
 from ui.order_list_widget import Ui_Form
 from PySide2 import QtCore, QtWidgets, QtGui
 from libs.events_handler import EventHandler
@@ -38,31 +39,32 @@ class OrderList(QtWidgets.QWidget, Ui_Form):
     def _load_positions(self, positions):
         """Load Positions from the file and create it in TreeWidget.
         """
-        if isinstance(positions, dict):
+        if not isinstance(positions, list):
             positions = [positions]
-        for row, position in enumerate(positions):
-            list_value = [position['ticker'],
-                          str(position['id']),
-                          str(datetime.fromtimestamp(position['date']).strftime('%Y-%m-%d %H:%M:%S')),
-                          position['order_type'],
-                          str(position['amount']),
-                          str(position['take_profit']),
-                          str(position['stop_loss']),
-                          str(round(position['price'], 2)),
-                          str(round(order_setting.get_profits(position), 2))
-                          ]
-            item = QtWidgets.QTreeWidgetItem(self.list_wdg, list_value)
+        if positions:
+            for row, position in enumerate(positions):
+                list_value = [position[1],
+                              str(position[0]),
+                              str(datetime.fromtimestamp(int(position[8])).strftime('%Y-%m-%d %H:%M')),
+                              position[2],
+                              str(position[4]),
+                              str(position[7]),
+                              str(position[6]),
+                              str(round(position[5], 2)),
+                              str(round(order_setting.get_profits(position), 2))
+                              ]
+                item = QtWidgets.QTreeWidgetItem(self.list_wdg, list_value)
 
-            # Button Close Position
-            close_btn = QtWidgets.QPushButton(text='X')
-            close_btn.setObjectName('close_position')
-            close_btn.setMaximumSize(40, 50)
-            close_btn.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
-            close_btn.setProperty('index', str(position['id']))
-            close_btn.setProperty('item', item)
-            close_btn.clicked.connect(self.close_position)
+                # Button Close Position
+                close_btn = QtWidgets.QPushButton(text='X')
+                close_btn.setObjectName('close_position')
+                close_btn.setMaximumSize(40, 50)
+                close_btn.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+                close_btn.setProperty('index', str(position[0]))
+                close_btn.setProperty('item', item)
+                close_btn.clicked.connect(self.close_position)
 
-            self.list_wdg.setItemWidget(item, len(list_value), close_btn)
+                self.list_wdg.setItemWidget(item, len(list_value), close_btn)
 
     def _set_size(self):
         """This method set size of the header.
@@ -93,10 +95,11 @@ class OrderList(QtWidgets.QWidget, Ui_Form):
         form.exec_()
         if form.result() == 0:
             position = form.position
-            utils_orders.modify_order(position)
+            db_connection = db_models.connection_to_db(cst.DATABASE)
+            db_models.update_position(db_connection, id=position[0], data=position)
             item = self.list_wdg.topLevelItem(items[0].row())
-            item.setText(5, str(position['take_profit']))
-            item.setText(6, str(position['stop_loss']))
+            item.setText(5, str(position[9]))
+            item.setText(6, str(position[10]))
 
     def contextMenuEvent(self, event):
         """Create a Menu for each Item in the TreeWidget.

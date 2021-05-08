@@ -1,6 +1,6 @@
 import re, os
 import json
-from utils import models
+from utils import db_models
 from utils import constants as cst
 from PySide2 import QtWidgets, QtCore
 
@@ -13,13 +13,15 @@ class LoginView(QtWidgets.QDialog, login_ui.Ui_Dialog):
         self.setupUi(self)
 
         # Constant
+        self.setting_path = None
+        self.db_connection = None
         self.error.setText("")
 
         self.btn_tab.toggled.connect(self.change_tab)
         self.btn_sign.clicked.connect(self.register_user)
         self.btn_login.clicked.connect(self.login)
 
-        self.db_connection = models.connection_to_db(cst.DATABASE)
+
 
     def load_ui(self):
         self.sign_user.setText('')
@@ -45,17 +47,17 @@ class LoginView(QtWidgets.QDialog, login_ui.Ui_Dialog):
         """
         user = self.sign_user.text().lower()
         mail = self.sign_email.text()
-        password = self.sign_passw.text()
-        # password = models.crypt_password(password=txt_password)
-        # print(password)
+        txt_password = self.sign_passw.text()
+        password = db_models.crypt_password(password=txt_password)
+        print(password)
         if not user or not mail or not password:
             self.error_2.setText("Please fill in all the fields.")
             return
         if self.sanity_check_validation_mail(mail):
-            if models.sanity_check_mail_exist(self.db_connection, mail):
-                id_user = models.create_user(self.db_connection,
-                                             user, mail, password
-                                             )
+            if db_models.sanity_check_mail_exist(self.db_connection, mail):
+                id_user = db_models.create_user(self.db_connection,
+                                                user, mail, password
+                                                )
                 self.error_2.setText('')
                 self.close()
             else:
@@ -68,27 +70,27 @@ class LoginView(QtWidgets.QDialog, login_ui.Ui_Dialog):
         """Login method
         """
         user = self.lg_email.text().lower()
-        password = self.lg_passw.text()
-        # password = models.crypt_password(password=txt_password)
-        # print(password)
-        # print(models.get_all_users(self.db_connection))
+        txt_password = self.lg_passw.text()
+        password = db_models.crypt_password(password=txt_password)
+        print(password)
+        print(db_models.get_all_users(self.db_connection))
 
         type_field = "user_username"
         if self.sanity_check_validation_mail(user):
             type_field = "mail"
 
-        login = models.find_user_login(self.db_connection,
-                                       user=user,
-                                       password=password,
-                                       type_field=type_field
-                                       )
+        login = db_models.find_user_login(self.db_connection,
+                                          user=user,
+                                          password=password,
+                                          type_field=type_field
+                                          )
         if not login:
             self.error.setText("Login Fail.")
             return
 
-        with open(self.setting_path, 'w') as f:
-            pref = {"last_login": {"user": user, "password": password}}
-            json.dump(pref, f, indent=4)
+        # with open(self.setting_path, 'w') as f:
+        #     pref = {"last_login": {"user": user, "password": password}}
+        #     json.dump(pref, f, indent=4)
 
         self.close()
 
@@ -112,5 +114,6 @@ class LoginView(QtWidgets.QDialog, login_ui.Ui_Dialog):
 
     def show(self, *args, **kwargs):
         self.setting_path = os.path.join(os.getenv('APP_HOME'), "setting.json")
+        self.db_connection = db_models.connection_to_db(cst.DATABASE)
         self.load_ui()
         super(LoginView, self).show()

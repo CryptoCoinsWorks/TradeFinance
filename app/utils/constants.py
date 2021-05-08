@@ -35,8 +35,8 @@ PERIODE = "1y"
 INTERVAL = "1d"
 INTERVAL_MONTH = "1mo"
 
-DATABASE = db_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data', "users.db")
+DATABASE = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data', "datas.db")
 
 AAA_YIELD_link = "https://ycharts.com/indicators/moodys_seasoned_aaa_corporate_bond_yield"
 
-PRIVATE_KEY = 'pRmgMa8T0INjEAfksaq2aafzoZXEuwKI7wDe4c1F8AY='
+PRIVATE_KEY = "8a0a9af0714144c99ed3dc18ce1d6ed5"

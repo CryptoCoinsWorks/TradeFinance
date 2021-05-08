@@ -1,7 +1,9 @@
 from PySide2 import QtGui, QtCore, QtWidgets
 from libs.events_handler import EventHandler
 from utils import utils_orders
+from utils import constants as cst
 from ui.order_modify_widget import Ui_Dialog
+from utils import db_models
 
 
 class ModifyOrderDialog(QtWidgets.QDialog, Ui_Dialog):
@@ -29,7 +31,8 @@ class ModifyOrderDialog(QtWidgets.QDialog, Ui_Dialog):
         """This method create a dict of
             the position from order.json
         """
-        self.position = utils_orders.get_position_by_id(self.id)
+        db_connection = db_models.connection_to_db(cst.DATABASE)
+        self.position = db_models.find_position_from_id(db_connection=db_connection, id=self.id)
 
     def get_data(self):
         """This method get the value from the QDoubleBox
@@ -37,8 +40,10 @@ class ModifyOrderDialog(QtWidgets.QDialog, Ui_Dialog):
         """
         stop_loss = self.box_stop.value()
         take_profit = self.box_profit.value()
-        self.position['take_profit'] = take_profit
-        self.position['stop_loss'] = stop_loss
+        position = list(self.position)
+        position[9] = take_profit
+        position[10] = stop_loss
+        self.position = tuple(position)
         self.close()
 
     def _change_box(self):

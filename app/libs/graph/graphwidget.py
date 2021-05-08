@@ -6,6 +6,7 @@ import pyqtgraph as pg
 from pprint import pprint
 from add_ons.charts import fibonnaci
 from utils import constants as cst
+from utils import db_models
 from libs.roi_manager import ROIManager
 from libs.widgets.roi_lines import *
 from PySide2 import QtCore, QtGui, QtWidgets
@@ -49,6 +50,7 @@ class GraphView(pg.GraphicsLayoutWidget):
         self.g_quotation.scene().sigMouseClicked.connect(
             self._on_mouse_clicked
         )
+        self.db_connection = db_models.connection_to_db(cst.DATABASE)
 
     def plot_quotation(self, data, ticker, clear=True):
         """Plot the quotation
@@ -232,15 +234,11 @@ class GraphView(pg.GraphicsLayoutWidget):
                     setting['HorizontalLine'] = {'pos': item.value()}
                 if setting:
                     settings.append(setting)
-            with open(path, 'w') as f:
-                json.dump(settings, f, indent=4)
+            id = db_models.add_chart(self.db_connection, ticker=self.ticker, data=settings)
 
     def restore_items(self, parent, ticker):
-        path = os.path.join(os.environ.get("APP_HOME"), "chart", "{}_chart.json".format(ticker))
-        if os.path.isfile(path):
-            with open(path, 'r') as f:
-                setting = json.load(f)
-            ROIManager.restore_items(self=parent, path=setting, graph=self.g_quotation)
+        setting = db_models.get_chart_data(self.db_connection, ticker)
+        ROIManager.restore_items(self=parent, all_items=setting, graph=self.g_quotation)
 
 class GraphWidget(QtWidgets.QWidget):
     """Widget wrapper for the graph"""
