@@ -26,7 +26,8 @@ class TableFinance(QTableWidgetFinance):
         self.setColumnCount(0)
 
         self.header = self.data['YEAR']
-        self.header[-1] = "Bilan"
+
+        self.header[-1] = ("Bilan")
         self.header.insert(0, 'Valorisation')
         score = self.data["Score"]
 
@@ -77,6 +78,9 @@ class TableFinance(QTableWidgetFinance):
         """
         self.clearSelection()
         self.current_hover = [0, 0]
-        for i in range(len(self.header)):
-            item = self.item(row, i)
-            item.setSelected(True)
+        try:
+            for i in range(len(self.header)):
+                item = self.item(row, i)
+                item.setSelected(True)
+        except:
+            pass

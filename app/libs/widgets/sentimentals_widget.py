@@ -75,11 +75,10 @@ class Sentimentals(object):
         self.handler = TA_Handler()
 
         # IF
-        ticker = utils.check_french_ticker(ticker)
+        tick = utils.check_french_ticker(ticker)
+        country, screener = self.handler.get_screener_from_symabol(tick)
 
-        country, screener = self.handler.get_screener_from_symabol(ticker)
-
-        self.handler.set_symbol_as(ticker)
+        self.handler.set_symbol_as(tick)
         self.handler.set_screener_as_stock(country)
         self.handler.set_exchange_as_crypto_or_stock(screener)
         self.handler.set_interval_as(Interval.INTERVAL_1_DAY)
@@ -89,6 +88,6 @@ class Sentimentals(object):
 
 
 if __name__ == '__main__':
-    ticker = "FP.PA"
+    ticker = "AI.PA"
     x = Sentimentals(ticker=ticker)
     print(x.get_senti())

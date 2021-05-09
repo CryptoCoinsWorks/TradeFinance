@@ -47,7 +47,7 @@ class AnalyseFondamental(object):
 
         self.analyse = AnalyseData(self.data_analyse)
         self.extend_dict_data()
-        # self.tes()
+        # self.add_analyse()
 
     def get_analysis_datas(self, ticker):
         r = requests.get("https://finance.yahoo.com/quote/{}/analysis?p={}".format(ticker, ticker))
@@ -220,12 +220,7 @@ class AnalyseFondamental(object):
         self.dividendes_ratio()
         self.roe_roa_ratio(roa=False)
         self.roe_roa_ratio(roa=True)
-        self.datas["Growth"] = self.growth
-
-    def tes(self):
-        for key, value in self.datas.items():
-            if len(value) <= 4:
-                self.datas[key].append("")
+        self.datas["Growth"] = ['', '', '', '', self.growth]
 
     def data_for_analyse(self):
         self.data_analyse["Actifs Total"] = self.datas["Actifs Total"]
@@ -358,6 +353,15 @@ class AnalyseFondamental(object):
     def extend_dict_data(self):
         for title, data in self.analyse.analyse.items():
             self.datas[title].append(data)
+
+        self._add_element_end()
+
+    def _add_element_end(self):
+        """Add empty string for element with not analyse
+        """
+        for key, value in self.datas.items():
+            if len(value) <= 4:
+                self.datas[key].append("")
 
 
 if __name__ == "__main__":
