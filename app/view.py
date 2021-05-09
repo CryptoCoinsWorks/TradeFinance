@@ -132,7 +132,7 @@ class MainWindow(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
             self.wgt_order_list._load_positions
         )
         self.top_toolbar.signals.sig_account.connect(
-            self.set_account
+            self.load_account
         )
 
         self.pub_go_welcome.clicked.connect(self.stw_main.slide_in_prev)
@@ -261,7 +261,7 @@ class MainWindow(QtWidgets.QMainWindow, main_window.Ui_MainWindow):
                 login_account = {}
         else:
             with open(setting_path, 'r') as f:
-                login_account = json.load(f)
+                login_account = json.load(f)['last_login']
         self.load_account(login_account)
 
     @QtCore.Slot(dict)

@@ -360,7 +360,7 @@ def check_french_ticker(ticker):
     :return: str
     """
     try:
-        ticker, = ticker.split('.')
+        ticker = ticker.split('.')[0]
     except:
         pass
 

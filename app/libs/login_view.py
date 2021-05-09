@@ -94,7 +94,7 @@ class LoginView(QtWidgets.QDialog, login_ui.Ui_Dialog):
 
         if self.checkBox.isChecked():
             with open(self.setting_path, 'w') as f:
-                pref = {"last_login": {"user": user, "password": password}}
+                pref = {"last_login": {"user": user, "password": password.decode('unicode_escape')}}
                 json.dump(pref, f, indent=4)
         self.close()
 
